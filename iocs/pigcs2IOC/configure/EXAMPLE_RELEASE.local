@@ -1,0 +1,6 @@
+# Use the following lines if motorPIGCS2 was built inside motor
+MOTOR=
+-include $(MOTOR)/configure/RELEASE
+# Use the following lines if motorPIGCS2 was built outside motor
+#!MOTOR_PIGCS2=
+#!-include $(MOTOR_PIGCS2)/configure/RELEASE.local
