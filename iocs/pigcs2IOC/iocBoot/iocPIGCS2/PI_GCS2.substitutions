@@ -1,0 +1,9 @@
+file "$(MOTOR)/motorApp/Db/asyn_motor.db"
+{
+pattern
+{P,        M,            DTYP,    PORT, ADDR,      DESC,  EGU,  DIR,  VELO,  VBAS,  ACCL,  BDST,  BVEL,  BACC,  MRES,  PREC,  DHLM,  DLLM,  INIT}
+# U-651.03
+{pigcs2:,  "m1",  "asynMotor",  "C867",    0,  "Motor 1", deg,  Pos,     5,     0,    .2,    0,      1,    .2,  0.0005,  4,     0.0,   0.0,  ""}
+# U-624.03
+{pigcs2:,  "m2",  "asynMotor",  "C867",    1,  "Motor 2", deg,  Pos,     5,     0,    .2,    0,      1,    .2,  0.0020,  4,     0.0,   0.0,  ""}
+}

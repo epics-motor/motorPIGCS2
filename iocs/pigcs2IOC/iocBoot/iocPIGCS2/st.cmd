@@ -1,8 +1,5 @@
 #!../../bin/linux-x86_64/pigcs2
 
-## You may have to change pigcs2 to something else
-## everywhere it appears in this file
-
 < envPaths
 
 cd "${TOP}"
@@ -11,11 +8,17 @@ cd "${TOP}"
 dbLoadDatabase "dbd/pigcs2.dbd"
 pigcs2_registerRecordDeviceDriver pdbbase
 
-## Load record instances
-#dbLoadRecords("db/xxx.db","user=kpetersn")
-
 cd "${TOP}/iocBoot/${IOC}"
+
+## motorUtil (allstop & alldone)
+dbLoadRecords("$(MOTOR)/db/motorUtil.db", "P=pigcs2:")
+
+##
+< PI_GCS2.cmd
+
 iocInit
 
-## Start any sequence programs
-#seq sncxxx,"user=kpetersn"
+## motorUtil (allstop & alldone)
+motorUtilInit("pigcs2:")
+
+# Boot complete

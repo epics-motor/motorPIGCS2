@@ -21,12 +21,14 @@ pigcs2_DBD += base.dbd
 # Include dbd files from all support applications:
 #ifdef ASYN
 pigcs2_DBD += asyn.dbd
+pigcs2_DBD += drvAsynSerialPort.dbd
+pigcs2_DBD += drvAsynIPPort.dbd
 #endif
 pigcs2_DBD += motorSupport.dbd
-pigcs2_DBD += devPIGCS2.dbd
+pigcs2_DBD += PI_GCS2Support.dbd
 
 # Add all the support libraries needed by this IOC
-pigcs2_LIBS += pigcs2
+pigcs2_LIBS += PI_GCS2Support
 pigcs2_LIBS += motor
 #ifdef ASYN
 pigcs2_LIBS += asyn
