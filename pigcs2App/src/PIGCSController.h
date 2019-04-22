@@ -46,7 +46,7 @@ public:
     bool getValue(const char* szMsg, bool& value);
 
     virtual asynStatus setVelocityCts( PIasynAxis* pAxis, double velocity );
-	virtual asynStatus setAccelerationCts( PIasynAxis* pAxis, double acceleration)	{ return asynSuccess; }
+	virtual asynStatus setAccelerationCts( PIasynAxis* pAxis, double acceleration);
 	virtual asynStatus setAcceleration( PIasynAxis* pAxis, double acceleration)	{ return asynSuccess; }
 	virtual asynStatus move( PIasynAxis* pAxis, double target);
 	virtual asynStatus moveCts( PIasynAxis* pAxis, int target);
@@ -59,6 +59,7 @@ public:
     virtual asynStatus setAxisPosition(PIasynAxis* pAxis, double position);
 
     virtual asynStatus getAxisPosition(PIasynAxis* pAxis, double& position);
+    virtual asynStatus getAxisPositionEGU(int inputSignalChannel, double& position);
     virtual asynStatus getAxisVelocity(PIasynAxis* pAxis);
     virtual asynStatus getAxisPositionCts(PIasynAxis* pAxis);
     virtual asynStatus setServo(PIasynAxis* pAxis, int servoState);

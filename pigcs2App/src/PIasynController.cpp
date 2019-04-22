@@ -62,6 +62,7 @@ PIasynController::PIasynController(const char *portName, const char* asynPort, i
 	, m_pGCSController( NULL )
 {
     createParam(PI_SUP_POSITION_String,		asynParamFloat64,	&PI_SUP_POSITION);
+    createParam(PI_SUP_POSITION_EGU_String,	asynParamFloat64,	&PI_SUP_POSITION_EGU);
     createParam(PI_SUP_TARGET_String,		asynParamFloat64,	&PI_SUP_TARGET);
     createParam(PI_SUP_SERVO_String,		asynParamInt32,		&PI_SUP_SERVO);
     createParam(PI_SUP_LAST_ERR_String,		asynParamInt32,		&PI_SUP_LAST_ERR);
@@ -317,7 +318,15 @@ asynStatus PIasynController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
      * status at the end, but that's OK */
     status = pAxis->setDoubleParam(function, value);
     
-    if (function == PI_SUP_TARGET)
+    if(function == motorVelocity_)
+    {
+        m_pGCSController->setVelocityCts(pAxis, value);
+    }
+    else if(function == motorAccel_)
+    {
+        m_pGCSController->setAccelerationCts(pAxis, value);
+    }
+    else if (function == PI_SUP_TARGET)
     {
     	printf("PI_SUP_TargetAO: %f for axis %d\n", value, pAxis->axisNo_);
     }

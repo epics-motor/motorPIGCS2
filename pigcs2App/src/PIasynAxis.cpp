@@ -141,6 +141,9 @@ asynStatus PIasynAxis::poll(bool *returnMoving)
 			double realPosition;
 			m_pGCSController->getAxisPosition(this, realPosition);
 			setDoubleParam(pController_->PI_SUP_POSITION,      realPosition );
+                        setDoubleParam(pController_->PI_SUP_POSITION, realPosition);
+                        m_pGCSController->getAxisPositionEGU(this->axisNo_, realPosition);
+                        setDoubleParam(pController_->PI_SUP_POSITION_EGU, realPosition);
 		}
     }
     if (m_isHoming)

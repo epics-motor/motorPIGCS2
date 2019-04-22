@@ -113,10 +113,6 @@ bool PIGCSController::IsGCS2(PIInterface* pInterface)
 
 asynStatus PIGCSController::setVelocityCts( PIasynAxis* pAxis, double velocity )
 {
-    if (!m_KnowsVELcommand)
-    {
-        return asynSuccess;
-    }
 	char cmd[100];
 	velocity = fabs(velocity) * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
     sprintf(cmd,"VEL %s %f", pAxis->m_szAxisName, velocity);
@@ -124,8 +120,23 @@ asynStatus PIGCSController::setVelocityCts( PIasynAxis* pAxis, double velocity )
     if (asynSuccess == status)
     {
     	pAxis->m_velocity = velocity;
+        return asynSuccess;
     }
-    return status;
+    return asynError;
+}
+
+asynStatus PIGCSController::setAccelerationCts( PIasynAxis* pAxis, double acceleration)
+{
+    char cmd[100];
+    acceleration = fabs(acceleration) * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
+    sprintf(cmd,"ACC %s %f", pAxis->m_szAxisName, acceleration);
+    asynStatus status = m_pInterface->sendOnly(cmd);
+    if (asynSuccess == status)
+    {
+    	pAxis->m_acceleration = acceleration;
+        return asynSuccess; 
+    }
+    return asynError; 
 }
 
 asynStatus PIGCSController::moveCts( PIasynAxis** pAxesArray, int* pTargetCtsArray, int numAxes)
@@ -163,7 +174,7 @@ asynStatus PIGCSController::setAxisPositionCts(PIasynAxis* pAxis, double positio
 	double position = double(positionCts) * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
 
 	asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
-		"PIGCSController::setAxisPositionCts(, %d) \n", positionCts);
+		"PIGCSController::setAxisPositionCts(, %f) \n", positionCts);
 	return setAxisPosition(pAxis, position);
 }
 
@@ -300,6 +311,23 @@ asynStatus PIGCSController::getAxisPosition(PIasynAxis* pAxis, double& position)
 	char cmd[100];
 	char buf[255];
 	sprintf(cmd, "POS? %s", pAxis->m_szAxisName);
+	asynStatus status = m_pInterface->sendAndReceive(cmd, buf, 99);
+	if (status != asynSuccess)
+	{
+		return status;
+	}
+	if (!getValue(buf, position))
+	{
+		status = asynError;
+	}
+	return status;
+}
+
+asynStatus PIGCSController::getAxisPositionEGU(int inputSignalChannel, double& position)
+{
+	char cmd[100];
+	char buf[255];
+	sprintf(cmd, "TSP? %d", inputSignalChannel);
 	asynStatus status = m_pInterface->sendAndReceive(cmd, buf, 99);
 	if (status != asynSuccess)
 	{
