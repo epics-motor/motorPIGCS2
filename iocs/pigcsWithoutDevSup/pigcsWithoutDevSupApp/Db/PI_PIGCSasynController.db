@@ -1,0 +1,49 @@
+record(ao, "$(P)$(M)")
+{
+    field(DESC, "$(DESC)")
+    field(DTYP, "asynFloat64")
+    field(EGU, "10e-1 nm")
+    field(PINI, "NO")
+    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_MOVE_ABS")
+}
+
+record(ai, "$(P)$(M)RBV")
+{
+    field(DESC, "Read Back Value of Axis")
+    field(DTYP, "asynFloat64")
+    field(PINI, "YES")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_POSITION")
+    field(PREC, "9")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(M)RBV_EGU")
+{
+    field(DESC, "Read Back Value in ums")
+    field(DTYP, "asynFloat64")
+    field(PINI, "YES")
+    field(EGU, "um")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_POSITION_EGU")
+    field(PREC, "9")
+    field(SCAN, "I/O Intr")
+}
+
+record(ao, "$(P)$(M)VELO")
+{
+    field(DESC, "Velocity")
+    field(DTYP, "asynFloat64")
+    field(EGU, "10e-1 nm")
+    field(VAL, "$(VELO)")
+    field(PINI, "YES")
+    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_MOVE_VEL")
+}
+
+record(ao, "$(P)$(M)ACCL")
+{
+    field(DESC, "Acceleration")
+    field(DTYP, "asynFloat64")
+    field(EGU, "10e-1 nm")
+    field(VAL, "$(ACCL)")
+    field(PINI, "YES")
+    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_ACCEL")
+}

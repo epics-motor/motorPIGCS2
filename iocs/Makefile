@@ -2,6 +2,7 @@ TOP = ..
 include $(TOP)/configure/CONFIG
 
 DIRS += pigcs2IOC
+DIRS += pigcsWithoutDevSup
 
 include $(TOP)/configure/RULES_TOP
 
