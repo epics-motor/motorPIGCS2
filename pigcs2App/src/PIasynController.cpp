@@ -320,11 +320,11 @@ asynStatus PIasynController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
     
     if(function == motorVelocity_)
     {
-        m_pGCSController->setVelocityCts(pAxis, value);
+        status = m_pGCSController->setVelocityCts(pAxis, value);
     }
     else if(function == motorAccel_)
     {
-        m_pGCSController->setAccelerationCts(pAxis, value);
+        status = m_pGCSController->setAccelerationCts(pAxis, value);
     }
     else if (function == PI_SUP_TARGET)
     {

@@ -14,6 +14,7 @@ include $(TOP)/configure/CONFIG
 
 DB += PI_SupportCtrl.db
 DB += PI_Support.db
+DB += PI_PIGCSasynController.db
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add

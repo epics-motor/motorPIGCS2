@@ -116,12 +116,19 @@ asynStatus PIGCSController::setVelocityCts( PIasynAxis* pAxis, double velocity )
 	char cmd[100];
 	velocity = fabs(velocity) * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
     sprintf(cmd,"VEL %s %f", pAxis->m_szAxisName, velocity);
+    pAxis->m_velocity = velocity;
     asynStatus status = m_pInterface->sendOnly(cmd);
-    if (asynSuccess == status)
+    if (asynSuccess != status)
     {
-    	pAxis->m_velocity = velocity;
-        return asynSuccess;
+    	return status; 
     }
+    int errorCode = getGCSError();
+    if (errorCode == 0)
+    	return asynSuccess;
+    
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+    		"PIGCSController::setVelocityCts failed, GCS error %d\n", errorCode);
+    
     return asynError;
 }
 
@@ -131,11 +138,18 @@ asynStatus PIGCSController::setAccelerationCts( PIasynAxis* pAxis, double accele
     acceleration = fabs(acceleration) * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
     sprintf(cmd,"ACC %s %f", pAxis->m_szAxisName, acceleration);
     asynStatus status = m_pInterface->sendOnly(cmd);
-    if (asynSuccess == status)
+    pAxis->m_acceleration = acceleration;
+    if (asynSuccess != status)
     {
-    	pAxis->m_acceleration = acceleration;
-        return asynSuccess; 
+        return status; 
     }
+    int errorCode = getGCSError();
+    if (errorCode == 0)
+    	return asynSuccess;
+
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+    		"PIGCSController::setAccelerationCts failed, GCS error %d\n", errorCode);
+    
     return asynError; 
 }
 
@@ -218,9 +232,9 @@ asynStatus PIGCSController::setAxisPosition(PIasynAxis* pAxis, double position)
 }
 
 
-asynStatus PIGCSController::moveCts( PIasynAxis* pAxis, int targetCts )
+asynStatus PIGCSController::moveCts( PIasynAxis* pAxis, double targetCts )
 {
-	double target = double(targetCts) * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
+	double target = targetCts * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
     asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
     		"PIGCSController::moveCts(, %d) \n", targetCts);
 	return move(pAxis, target);
