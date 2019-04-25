@@ -4,13 +4,13 @@ file "$(TOP)/db/PI_PIGCSasynController.db"
 
 #encoder ratio = 10e4  , i.e., 1mm = 10000 encoder steps
 pattern
-#                                                                        min 3 x 10e-1 um/s
-#                                                                        max 100       mm/s
-{P,      N,     M, 	  PORT,      TIMEOUT, ADDR,   DESC,                  VELO,            ACCL} 
+#                                                                      min 3 x 10e-1 um/s
+#                                                                      max 100       mm/s
+{P,      N,     M, 	  PORT,      TIMEOUT, ADDR,   DESC,                VELO,            ACCL} 
 
-{"PIC867:",  1,  "m$(N):", "PIasyn2",  1,       0,    "PI-STAGE-C867-X",     30000,           30000}
+{"PIC867",  1,  "m$(N)", "PIasyn2",  1,       0,    "PI-STAGE-C867-X",     30000,           10000}
 
-{"PIC867:",  2,  "m$(N):", "PIasyn2",  1,       1,    "PI-STAGE-C867-Y",     30000,           30000}
+{"PIC867",  2,  "m$(N)", "PIasyn2",  1,       1,    "PI-STAGE-C867-Y",     30000,           10000}
 
 }
 

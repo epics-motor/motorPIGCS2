@@ -339,9 +339,11 @@ asynStatus PIGCSController::getAxisPosition(PIasynAxis* pAxis, double& position)
 
 asynStatus PIGCSController::getAxisPositionEGU(int inputSignalChannel, double& position)
 {
+    const char* szIdentification = (char*) this->szIdentification;
+    if(strstr(szIdentification, "E-727") != NULL){
 	char cmd[100];
 	char buf[255];
-	sprintf(cmd, "TSP? %d", inputSignalChannel);
+	sprintf(cmd, "TSP? %d", (inputSignalChannel+1));
 	asynStatus status = m_pInterface->sendAndReceive(cmd, buf, 99);
 	if (status != asynSuccess)
 	{
@@ -352,6 +354,8 @@ asynStatus PIGCSController::getAxisPositionEGU(int inputSignalChannel, double& p
 		status = asynError;
 	}
 	return status;
+    }
+    return asynSuccess;
 }
 
 /**

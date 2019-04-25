@@ -90,6 +90,7 @@ void PIasynAxis::Init(const char *portName)
 	m_pGCSController->getAxisVelocity(this);
 	m_pGCSController->getAxisPositionCts(this);
 	setDoubleParam(pController_->motorPosition_, m_positionCts);
+        m_pGCSController->setAxisPosition(this, m_positionCts);
 	setDoubleParam(pController_->motorMoveAbs_, m_positionCts);
 	m_pGCSController->getTravelLimits(this, negLimit_, posLimit_);
 	setDoubleParam(pController_->motorLowLimit_, negLimit_);
@@ -140,7 +141,6 @@ asynStatus PIasynAxis::poll(bool *returnMoving)
 			m_pGCSController->getAxisPositionCts(this);
 			double realPosition;
 			m_pGCSController->getAxisPosition(this, realPosition);
-			setDoubleParam(pController_->PI_SUP_POSITION,      realPosition );
                         setDoubleParam(pController_->PI_SUP_POSITION, realPosition);
                         m_pGCSController->getAxisPositionEGU(this->axisNo_, realPosition);
                         setDoubleParam(pController_->PI_SUP_POSITION_EGU, realPosition);
