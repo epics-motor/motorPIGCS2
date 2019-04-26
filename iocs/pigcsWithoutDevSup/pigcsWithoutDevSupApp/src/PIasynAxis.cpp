@@ -92,7 +92,12 @@ void PIasynAxis::Init(const char *portName)
 	setDoubleParam(pController_->motorPosition_, m_positionCts);
         m_pGCSController->setAxisPosition(this, m_positionCts);
 	setDoubleParam(pController_->motorMoveAbs_, m_positionCts);
-	m_pGCSController->getTravelLimits(this, negLimit_, posLimit_);
+	status = m_pGCSController->getTravelLimits(this, negLimit_, posLimit_);
+        if(asynError == status){
+            asynPrint(logSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR, 
+                        "PIasynController::configAxis() axis %d - getTravelLimits() failed aborting initialization\n", this->m_szAxisName); //abort in case we don't know the travel limits
+            return;
+        }
 	setDoubleParam(pController_->motorLowLimit_, negLimit_);
 	setDoubleParam(pController_->motorHighLimit_, posLimit_);
 	m_pGCSController->getReferencedState(this);
@@ -223,7 +228,7 @@ asynStatus PIasynAxis::move(double position, int relative, double minVelocity, d
 		setIntegerParam(pController_->motorStatusDone_, 0);
 		callParamCallbacks();
 
-		status = m_pGCSController->moveCts(this, position);
+		status = m_pGCSController->moveCts(this, this->negLimit_, this->posLimit_, position);
    }
     epicsEventSignal(pController_->pollEventId_);
 

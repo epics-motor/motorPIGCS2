@@ -49,7 +49,7 @@ public:
 	virtual asynStatus setAccelerationCts( PIasynAxis* pAxis, double acceleration);
 	virtual asynStatus setAcceleration( PIasynAxis* pAxis, double acceleration)	{ return asynSuccess; }
 	virtual asynStatus move( PIasynAxis* pAxis, double target);
-	virtual asynStatus moveCts( PIasynAxis* pAxis, double target);
+	virtual asynStatus moveCts( PIasynAxis* pAxis, double lowLimit, double highLimit, double target);
 	virtual asynStatus moveCts( PIasynAxis** pAxesArray, int* pTargetCtsArray, int numAxes);
 	virtual asynStatus referenceVelCts( PIasynAxis* pAxis, double velocity, int forwards) { return asynSuccess;	}
 	virtual asynStatus haltAxis(PIasynAxis* pAxis);

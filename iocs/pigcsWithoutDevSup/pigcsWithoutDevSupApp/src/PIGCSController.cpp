@@ -231,13 +231,20 @@ asynStatus PIGCSController::setAxisPosition(PIasynAxis* pAxis, double position)
 
 }
 
-
-asynStatus PIGCSController::moveCts( PIasynAxis* pAxis, double targetCts )
+asynStatus PIGCSController::moveCts( PIasynAxis* pAxis, double lowLimit, double highLimit, double targetCts )
 {
-	double target = targetCts * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
-    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
-    		"PIGCSController::moveCts(, %d) \n", targetCts);
+    double target;
+    if(targetCts !=0) target = targetCts * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
+    else              target = targetCts;
+    if(target >= lowLimit && target <= highLimit)
+    {
+        asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+        "PIGCSController::moveCts(, %f) \n", targetCts);
 	return move(pAxis, target);
+    }
+    
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR, "PIGCSController::moveCts() failed, out of limits target position\n");
+    return asynError;
 }
 
 asynStatus PIGCSController::move( PIasynAxis* pAxis, double target )
