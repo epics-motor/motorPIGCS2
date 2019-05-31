@@ -12,7 +12,11 @@ include $(TOP)/configure/CONFIG
 # databases, templates, substitutions like this
 #DB += xxx.db
 
-DB += PI_PIGCSasynController.db
+ifdef MOTOR_PIGCS2
+DB += $(MOTOR_PIGCS2)/db/PI_PIGCSasynController.db
+else
+DB += $(MOTOR)/db/PI_PIGCSasynController.db
+endif
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add

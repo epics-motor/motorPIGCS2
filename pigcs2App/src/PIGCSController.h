@@ -59,7 +59,7 @@ public:
     virtual asynStatus setAxisPosition(PIasynAxis* pAxis, double position);
 
     virtual asynStatus getAxisPosition(PIasynAxis* pAxis, double& position);
-    virtual asynStatus getAxisPositionEGU(int inputSignalChannel, double& position);
+    virtual asynStatus getAxisPositionEGU(int inputSignalChannel, double& position) { return asynSuccess;   }
     virtual asynStatus getAxisVelocity(PIasynAxis* pAxis);
     virtual asynStatus getAxisPositionCts(PIasynAxis* pAxis);
     virtual asynStatus setServo(PIasynAxis* pAxis, int servoState);

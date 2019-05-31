@@ -15,6 +15,8 @@ DBD += pigcsWithoutDevSup.dbd
 pigcsWithoutDevSup_DBD += base.dbd
 pigcsWithoutDevSup_DBD += asyn.dbd
 pigcsWithoutDevSup_DBD += drvAsynIPPort.dbd
+pigcsWithoutDevSup_DBD += drvAsynSerialPort.dbd
+pigcsWithoutDevSup_DBD += motorSupport.dbd
 pigcsWithoutDevSup_DBD += PI_GCS2Support.dbd
 
 #pigcsWithoutDevSup_registerRecordDeviceDriver.cpp derives from pigcsWithoutDevSup.dbd
@@ -28,21 +30,10 @@ pigcsWithoutDevSup_SRCS_vxWorks += -nil-
 #pigcsWithoutDevSup_OBJS_vxWorks += $(EPICS_BASE_BIN)/vxComLibrary
 
 # The following are compiled and added to the Support library
-pigcsWithoutDevSup_SRCS += PIasynController.cpp
-pigcsWithoutDevSup_SRCS += PIasynAxis.cpp
-pigcsWithoutDevSup_SRCS += PIGCSController.cpp
-pigcsWithoutDevSup_SRCS += PIGCSMotorController.cpp
-pigcsWithoutDevSup_SRCS += PIGCSPiezoController.cpp
-pigcsWithoutDevSup_SRCS += PIE517Controller.cpp
-pigcsWithoutDevSup_SRCS += PIE755Controller.cpp
-pigcsWithoutDevSup_SRCS += PIHexapodController.cpp
-pigcsWithoutDevSup_SRCS += PIGCS2_HexapodController.cpp
-pigcsWithoutDevSup_SRCS += PIC702Controller.cpp
-pigcsWithoutDevSup_SRCS += translateerror.c
-pigcsWithoutDevSup_SRCS += PIInterface.cpp
 
-pigcsWithoutDevSup_LIBS += motor
 pigcsWithoutDevSup_LIBS += asyn
+pigcsWithoutDevSup_LIBS += motor
+pigcsWithoutDevSup_LIBS += PI_GCS2Support
 
 # Finally link to the EPICS Base libraries
 pigcsWithoutDevSup_LIBS += $(EPICS_BASE_IOC_LIBS)

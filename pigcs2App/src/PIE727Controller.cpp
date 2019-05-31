@@ -1,18 +1,17 @@
 /*
-FILENAME...     PIGCSPiezoController.cpp
+FILENAME...     PIE727Controller.cpp
 
 *************************************************************************
-* Copyright (c) 2011-2013 Physik Instrumente (PI) GmbH & Co. KG
 * This file is distributed subject to the EPICS Open License Agreement
 * found in the file LICENSE that is included with this distribution.
 *************************************************************************
 
 
-Original Author: Steffen Rau 
-Created: 15.12.2010
+Original Author: Allan S. B. Bugyi
+Created: 31.05.2019
 */
 
-#include "PIGCSPiezoController.h"
+#include "PIE727Controller.h"
 #include "PIasynAxis.h"
 #include "PIInterface.h"
 #include <math.h>
@@ -22,7 +21,7 @@ Created: 15.12.2010
 //#define asynPrint(user,reason,format...) 0
 
 
-asynStatus PIGCSPiezoController::getStatus(PIasynAxis* pAxis, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl)
+asynStatus PIE727Controller::getStatus(PIasynAxis* pAxis, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl)
 {
     asynStatus status = getMoving(pAxis, moving);
     if (status != asynSuccess)
@@ -37,13 +36,13 @@ asynStatus PIGCSPiezoController::getStatus(PIasynAxis* pAxis, int& homing, int& 
     return status;
 }
 
-asynStatus PIGCSPiezoController::getReferencedState(PIasynAxis* pAxis)
+asynStatus PIE727Controller::getReferencedState(PIasynAxis* pAxis)
 {
 	pAxis->m_homed = 1;
 	return asynSuccess;
 }
 
-asynStatus PIGCSPiezoController::initAxis(PIasynAxis* pAxis)
+asynStatus PIE727Controller::initAxis(PIasynAxis* pAxis)
 {
     pAxis->m_movingStateMask = pow(2.0, pAxis->getAxisNo());
 
@@ -51,10 +50,10 @@ asynStatus PIGCSPiezoController::initAxis(PIasynAxis* pAxis)
 }
 
 /**
- *  Currenty no Piezo controller supports "HLT".
+ *  Currenty no PIE727 controller supports "HLT".
  *  use STP - which will stop all axes...
  */
-asynStatus PIGCSPiezoController::haltAxis(PIasynAxis* pAxis)
+asynStatus PIE727Controller::haltAxis(PIasynAxis* pAxis)
 {
     asynStatus status = m_pInterface->sendOnly("STP");
     if (status != asynSuccess)
@@ -66,10 +65,31 @@ asynStatus PIGCSPiezoController::haltAxis(PIasynAxis* pAxis)
     if (err != PI_CNTR_STOP)
     {
         asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
-        		"PIGCSPiezoController::haltAxis() failed, GCS error %d", err);
+        		"PIE727Controller::haltAxis() failed, GCS error %d", err);
         return asynError;
     }
     return status;
+}
+
+asynStatus PIE727Controller::getAxisPositionEGU(int inputSignalChannel, double& position)
+{
+    const char* szIdentification = (char*) this->szIdentification;
+    if(strstr(szIdentification, "E-727") != NULL){
+	char cmd[100];
+	char buf[255];
+	sprintf(cmd, "TSP? %d", (inputSignalChannel+1));
+	asynStatus status = m_pInterface->sendAndReceive(cmd, buf, 99);
+	if (status != asynSuccess)
+	{
+		return status;
+	}
+	if (!getValue(buf, position))
+	{
+		status = asynError;
+	}
+	return status;
+    }
+    return asynSuccess;
 }
 
 

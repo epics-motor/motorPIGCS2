@@ -21,6 +21,7 @@ Created: 15.12.2010
 #include "PIGCSMotorController.h"
 #include "PIGCSPiezoController.h"
 #include "PIE517Controller.h"
+#include "PIE727Controller.h"
 #include "PIE755Controller.h"
 #include "PIHexapodController.h"
 #include "PIGCS2_HexapodController.h"
@@ -60,11 +61,14 @@ PIGCSController* PIGCSController::CreateGCSController(PIInterface* pInterface, c
 				||	strstr(szIDN, "E-709") != NULL
 				||	strstr(szIDN, "E-712") != NULL
 				||	strstr(szIDN, "E-725") != NULL
-				||	strstr(szIDN, "E-727") != NULL
-				)
+                )
 	{
 		return new PIGCSPiezoController(pInterface, szIDN);
 	}
+        else if ( strstr(szIDN, "E-727") != NULL)
+        {
+                return new PIE727Controller(pInterface, szIDN);
+        }
 	else if ( strstr(szIDN, "E-755") != NULL)
 	{
 		return new PIE755Controller(pInterface, szIDN);
@@ -113,14 +117,17 @@ bool PIGCSController::IsGCS2(PIInterface* pInterface)
 
 asynStatus PIGCSController::setVelocityCts( PIasynAxis* pAxis, double velocity )
 {
+    if (!m_KnowsVELcommand)
+    {
+        return asynSuccess;
+    }
 	char cmd[100];
 	velocity = fabs(velocity) * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
     sprintf(cmd,"VEL %s %f", pAxis->m_szAxisName, velocity);
-    pAxis->m_velocity = velocity;
     asynStatus status = m_pInterface->sendOnly(cmd);
-    if (asynSuccess != status)
+    if (asynSuccess == status)
     {
-    	return status; 
+        pAxis->m_velocity = velocity;
     }
     int errorCode = getGCSError();
     if (errorCode == 0)
@@ -138,10 +145,9 @@ asynStatus PIGCSController::setAccelerationCts( PIasynAxis* pAxis, double accele
     acceleration = fabs(acceleration) * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
     sprintf(cmd,"ACC %s %f", pAxis->m_szAxisName, acceleration);
     asynStatus status = m_pInterface->sendOnly(cmd);
-    pAxis->m_acceleration = acceleration;
-    if (asynSuccess != status)
+    if (asynSuccess == status)
     {
-        return status; 
+        pAxis->m_acceleration = acceleration; 
     }
     int errorCode = getGCSError();
     if (errorCode == 0)
@@ -342,27 +348,6 @@ asynStatus PIGCSController::getAxisPosition(PIasynAxis* pAxis, double& position)
 		status = asynError;
 	}
 	return status;
-}
-
-asynStatus PIGCSController::getAxisPositionEGU(int inputSignalChannel, double& position)
-{
-    const char* szIdentification = (char*) this->szIdentification;
-    if(strstr(szIdentification, "E-727") != NULL){
-	char cmd[100];
-	char buf[255];
-	sprintf(cmd, "TSP? %d", (inputSignalChannel+1));
-	asynStatus status = m_pInterface->sendAndReceive(cmd, buf, 99);
-	if (status != asynSuccess)
-	{
-		return status;
-	}
-	if (!getValue(buf, position))
-	{
-		status = asynError;
-	}
-	return status;
-    }
-    return asynSuccess;
 }
 
 /**

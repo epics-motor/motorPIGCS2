@@ -67,7 +67,6 @@ private:
 
 
 #define PI_SUP_POSITION_String		"PI_SUP_POSITION"
-#define PI_SUP_POSITION_EGU_String      "PI_SUP_POSITION_EGU"
 #define PI_SUP_TARGET_String		"PI_SUP_TARGET"
 #define PI_SUP_SERVO_String			"PI_SUP_SERVO"
 #define PI_SUP_LAST_ERR_String		"PI_SUP_LAST_ERR"
@@ -77,7 +76,7 @@ private:
 #define PI_SUP_RBPIVOT_X_String		"PI_SUP_RBPIVOT_X"
 #define PI_SUP_RBPIVOT_Y_String		"PI_SUP_RBPIVOT_Y"
 #define PI_SUP_RBPIVOT_Z_String		"PI_SUP_RBPIVOT_Z"
-
+#define PI_SUP_POSITION_EGU_String      "PI_SUP_POSITION_EGU"
 
 typedef struct PIasynControllerNode {
     ELLNODE node;

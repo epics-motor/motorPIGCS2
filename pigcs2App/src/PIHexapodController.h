@@ -53,7 +53,7 @@ public:
     virtual bool AcceptsNewTarget() { return !m_bAnyAxisMoving; }
     virtual bool CanCommunicateWhileHoming() { return false; }
 
-	virtual asynStatus moveCts( PIasynAxis* pAxis, int target);
+	virtual asynStatus moveCts( PIasynAxis* pAxis, double lowLimit, double highLimit, int target);
 	virtual asynStatus moveCts( PIasynAxis** pAxesArray, int* pTargetCtsArray, int numAxes);
     virtual asynStatus getAxisPosition(PIasynAxis* pAxis, double& position);
 

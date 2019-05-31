@@ -148,7 +148,7 @@ asynStatus PIHexapodController::getReferencedState(PIasynAxis* pAxis)
     return status;
 }
 
-asynStatus PIHexapodController::moveCts( PIasynAxis* pAxis, int targetCts )
+asynStatus PIHexapodController::moveCts( PIasynAxis* pAxis, double lowLimit, double highLimit, int targetCts )
 {
 //	printf("PIHexapodController::moveCts(,%d)...\n",targetCts);
 	asynStatus status;
