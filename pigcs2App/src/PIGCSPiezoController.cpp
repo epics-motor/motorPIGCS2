@@ -39,12 +39,39 @@ asynStatus PIGCSPiezoController::getStatus(PIasynAxis* pAxis, int& homing, int& 
 
 asynStatus PIGCSPiezoController::getReferencedState(PIasynAxis* pAxis)
 {
+    if (m_hasqFRF)
+    {
+        asynStatus status = PIGCSController::getReferencedState (pAxis);
+        if (asynSuccess == status)
+        {
+            return status;
+        }
+        if (getGCSError () != PI_CNTR_UNKNOWN_COMMAND__2)
+        {
+            return asynError;
+        }
+        m_hasqFRF = false;
+    }
 	pAxis->m_homed = 1;
 	return asynSuccess;
 }
 
 asynStatus PIGCSPiezoController::initAxis(PIasynAxis* pAxis)
 {
+    pAxis->m_bHasReference = false;
+    if (m_hasqTRS)
+    {
+        asynStatus status = hasReferenceSensor (pAxis);
+        if (asynSuccess != status)
+        {
+            if (getGCSError () != PI_CNTR_UNKNOWN_COMMAND__2)
+            {
+                return asynError;
+            }
+            m_hasqTRS = false;
+        }
+    }
+
     pAxis->m_movingStateMask = pow(2.0, pAxis->getAxisNo());
 
 	return setServo(pAxis, 1);
@@ -72,4 +99,45 @@ asynStatus PIGCSPiezoController::haltAxis(PIasynAxis* pAxis)
     return status;
 }
 
+asynStatus PIGCSPiezoController::referenceVelCts (PIasynAxis* pAxis, double velocity, int forwards)
+{
+    if (!m_hasqFRF)
+    {
+        // device does not know how to reference, many piezo stages have absolute sensors
+        return asynSuccess;
+    }
+
+    asynStatus status = setServo(pAxis, 0); // piezo controllers need the servo to be disabled
+    if (asynSuccess != status)
+        return status;
+
+    char cmd[100];
+    if (pAxis->m_bHasReference)
+    {
+        // call FRF - find reference
+        sprintf(cmd,"FRF %s", pAxis->m_szAxisName);
+    }
+    else
+    {
+        asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
+                  "PIGCSPiezoController::referenceVelCts() failed - axis has no reference switch\n");
+        epicsSnprintf(pAxis->m_pasynUser->errorMessage,pAxis->m_pasynUser->errorMessageSize,
+                      "PIGCSPiezoController::referenceVelCts() failed - axis has no reference switch\n");
+        return asynError;
+    }
+    status = m_pInterface->sendOnly(cmd);
+    if (asynSuccess != status)
+        return status;
+    int errorCode = getGCSError();
+    if (errorCode == 0)
+    {
+        return asynSuccess;
+    }
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
+              "PIGCSPiezoController::referenceVelCts() failed\n");
+    epicsSnprintf(pAxis->m_pasynUser->errorMessage,pAxis->m_pasynUser->errorMessageSize,
+                  "PIGCSPiezoController::referenceVelCts() failed - GCS Error %d\n",errorCode);
+    return asynError;
+
+}
 

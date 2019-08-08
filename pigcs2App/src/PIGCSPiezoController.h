@@ -28,6 +28,8 @@ class PIGCSPiezoController : public PIGCSController
 public:
 	PIGCSPiezoController(PIInterface* pInterface, const char* szIDN)
 	: PIGCSController(pInterface, szIDN)
+        , m_hasqFRF (true)
+        , m_hasqTRS (true)
 	{
 	}
 	~PIGCSPiezoController() {}
@@ -38,9 +40,12 @@ public:
 
     virtual asynStatus getStatus(PIasynAxis* pAxis, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl);
     virtual asynStatus getReferencedState(PIasynAxis* pAxis);
+    virtual asynStatus referenceVelCts( PIasynAxis* pAxis, double velocity, int forwards);
 
 
 private:
+    bool m_hasqFRF; ///< is "FRF?" command available
+    bool m_hasqTRS; ///< is "TRS?" command available
 
 };
 

@@ -655,7 +655,7 @@ asynStatus PIGCSController::getReferencedState(PIasynAxis* pAxis)
     {
     	return status;
     }
-    if (getValue(buf, pAxis->m_homed))
+    if (!getValue(buf, pAxis->m_homed))
     {
     	return asynError;
     }
