@@ -8,7 +8,7 @@ FILENAME...     PIGCScontroller.h
 *************************************************************************
 
 
-Original Author: Steffen Rau 
+Original Author: Steffen Rau
 Created: 15.12.2010
 */
 
@@ -27,7 +27,7 @@ class PIGCSPiezoController : public PIGCSController
 {
 public:
 	PIGCSPiezoController(PIInterface* pInterface, const char* szIDN)
-	: PIGCSController(pInterface, szIDN)
+        : PIGCSController (pInterface, szIDN)
         , m_hasqFRF (true)
         , m_hasqTRS (true)
 	{

@@ -1,6 +1,6 @@
 /*
-FILENAME...     PIGCScontroller.h 
- 
+FILENAME...     PIGCScontroller.h
+
 *************************************************************************
 * Copyright (c) 2011-2013 Physik Instrumente (PI) GmbH & Co. KG
 * This file is distributed subject to the EPICS Open License Agreement
@@ -8,7 +8,7 @@ FILENAME...     PIGCScontroller.h
 *************************************************************************
 
 
-Original Author: Steffen Rau 
+Original Author: Steffen Rau
 Created: 15.12.2010
 */
 
@@ -51,7 +51,7 @@ public:
 	virtual asynStatus move( PIasynAxis* pAxis, double target);
 	virtual asynStatus moveCts( PIasynAxis* pAxis, int target);
 	virtual asynStatus moveCts( PIasynAxis** pAxesArray, int* pTargetCtsArray, int numAxes);
-	virtual asynStatus referenceVelCts( PIasynAxis* pAxis, double velocity, int forwards) = 0;
+    virtual asynStatus referenceVelCts (PIasynAxis* pAxis, double velocity, int forwards) = 0;
 	virtual asynStatus haltAxis(PIasynAxis* pAxis);
 
 
@@ -95,6 +95,9 @@ public:
     PIInterface* m_pInterface;
     static const size_t MAX_NR_AXES = 64;
 	bool m_bAnyAxisMoving;
+
+    static void getStatusFromBitMask(long mask, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl);
+
 protected:
     asynStatus setGCSParameter(PIasynAxis* pAxis, unsigned int paramID, double value);
     asynStatus getGCSParameter(PIasynAxis* pAxis, unsigned int paramID, double& value);

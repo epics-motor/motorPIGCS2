@@ -8,7 +8,7 @@ FILENAME...     PIGCSPiezoController.cpp
 *************************************************************************
 
 
-Original Author: Steffen Rau 
+Original Author: Steffen Rau
 Created: 15.12.2010
 */
 
@@ -24,15 +24,26 @@ Created: 15.12.2010
 
 asynStatus PIGCSPiezoController::getStatus(PIasynAxis* pAxis, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl)
 {
-    asynStatus status = getMoving(pAxis, moving);
+    char cmd[100];
+    char buf[255];
+    sprintf(cmd, "SRG? %s 1", pAxis->m_szAxisName);
+    asynStatus status = m_pInterface->sendAndReceive(cmd, buf, 99);
     if (status != asynSuccess)
     {
-    	return status;
+        return status;
     }
 
-   	homing = 0;
-   	negLimit = 0;
-   	posLimit = 0;
+    const char* p = strstr(buf, "=");
+    if (p==NULL || *p == '\0')
+    {
+        return asynError;
+    }
+
+    long mask = strtol(p+1, NULL, 0);
+    getStatusFromBitMask (mask, homing, moving, negLimit, posLimit, servoControl);
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW,
+              "PIGCSPiezoController::getStatus() buf:%s moving %d, svo: %d\n",
+              buf, moving, servoControl);
 
     return status;
 }
@@ -59,6 +70,7 @@ asynStatus PIGCSPiezoController::getReferencedState(PIasynAxis* pAxis)
 asynStatus PIGCSPiezoController::initAxis(PIasynAxis* pAxis)
 {
     pAxis->m_bHasReference = false;
+
     if (m_hasqTRS)
     {
         asynStatus status = hasReferenceSensor (pAxis);
@@ -74,7 +86,13 @@ asynStatus PIGCSPiezoController::initAxis(PIasynAxis* pAxis)
 
     pAxis->m_movingStateMask = pow(2.0, pAxis->getAxisNo());
 
-	return setServo(pAxis, 1);
+    // enable servo only if axis is homed
+    int servoState = 1;
+    if (asynSuccess == getReferencedState (pAxis))
+    {
+        servoState = pAxis->m_homed;
+    }
+	return setServo(pAxis, servoState);
 }
 
 /**

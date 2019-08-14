@@ -733,3 +733,12 @@ bool PIGCSController::getValue(const char* szMsg, bool& value)
 	value = (ivalue =! 0);
 	return true;
 }
+
+void PIGCSController::getStatusFromBitMask (long mask, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl)
+{
+    moving = (mask & 0x2000) ? 1 : 0;
+    homing = (mask & 0x4000) ? 1 : 0;
+    negLimit = (mask & 0x0001) ? 1 : 0;
+    posLimit = (mask & 0x0004) ? 1 : 0;
+    servoControl = (mask & 0x1000) ? 1 : 0;
+}
