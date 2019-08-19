@@ -41,6 +41,9 @@ asynStatus PIGCSPiezoController::getStatus(PIasynAxis* pAxis, int& homing, int& 
 
     long mask = strtol(p+1, NULL, 0);
     getStatusFromBitMask (mask, homing, moving, negLimit, posLimit, servoControl);
+    // TODO: use parameter or "LIM?" to find out if stage has limit switches
+    negLimit = 0;
+    posLimit = 0;
     asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW,
               "PIGCSPiezoController::getStatus() buf:%s moving %d, svo: %d\n",
               buf, moving, servoControl);
