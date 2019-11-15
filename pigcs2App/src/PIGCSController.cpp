@@ -730,7 +730,7 @@ bool PIGCSController::getValue(const char* szMsg, bool& value)
 		return false;
 	}
 	int ivalue = atoi(p+1);
-	value = (ivalue =! 0);
+	value = (ivalue != 0);
 	return true;
 }
 
