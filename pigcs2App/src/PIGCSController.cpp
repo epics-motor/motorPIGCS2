@@ -25,6 +25,7 @@ Created: 15.12.2010
 #include "PIHexapodController.h"
 #include "PIGCS2_HexapodController.h"
 #include "PIC702Controller.h"
+#include "PIC885Controller.h"
 
 
 //#undef asynPrint
@@ -56,7 +57,12 @@ PIGCSController* PIGCSController::CreateGCSController(PIInterface* pInterface, c
 	{
 		return new PIE517Controller(pInterface, szIDN);
 	}
+	else if ( strstr(szIDN, "C-885") != NULL )
+	{
+		return new PIC885Controller(pInterface, szIDN);
+	}
 	else if ( 		strstr(szIDN, "E-753") != NULL
+				||	strstr(szIDN, "E-754") != NULL
 				||	strstr(szIDN, "E-709") != NULL
 				||	strstr(szIDN, "E-712") != NULL
 				||	strstr(szIDN, "E-725") != NULL
@@ -250,6 +256,7 @@ int PIGCSController::getGCSError()
 		return COM_ERROR;
 	}
 	int errorCode = atoi(buf);
+		
 	if (0 != errorCode)
 	{
 		m_LastError = errorCode;
@@ -498,6 +505,54 @@ asynStatus PIGCSController::setServo(PIasynAxis* pAxis, int servoState)
 
 }
 
+asynStatus PIGCSController::setEnableAxis(PIasynAxis* pAxis, int axisEnableState)
+{
+    char cmd[100];
+    sprintf(cmd, "EAX %s %d", pAxis->m_szAxisName, axisEnableState);
+    asynStatus status = m_pInterface->sendOnly(cmd);
+    if (status != asynSuccess)
+    {
+    	return status;
+    }
+	
+	int errorCode = getGCSError();
+    if (errorCode == 0)
+    	return asynSuccess;
+
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+    		"PIGCSController::setEnableAxis() failed, GCS error %d\n", errorCode);
+
+    return asynError;
+}
+
+asynStatus PIGCSController::getEnableAxis(PIasynAxis* pAxis, int& axisEnableState)
+{
+    char cmd[100];
+	char buf[255];
+    sprintf(cmd, "EAX? %s", pAxis->m_szAxisName);
+    asynStatus status = m_pInterface->sendAndReceive(cmd,  buf, 99);
+    if (status != asynSuccess)
+    {
+    	return status;
+    }
+	
+	int errorCode = getGCSError();
+    if (errorCode == 0)
+	{
+		if (!getValue(buf, axisEnableState))
+		{
+			return asynError;
+		}
+	
+    	return asynSuccess;
+	}
+
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+    		"PIGCSController::setEnableAxis() failed, GCS error %d\n", errorCode);
+
+    return asynError;
+}
+
 asynStatus PIGCSController::getMoving(PIasynAxis* pAxis, int& moving)
 {
 	char buf[255];
@@ -505,7 +560,7 @@ asynStatus PIGCSController::getMoving(PIasynAxis* pAxis, int& moving)
     if (status != asynSuccess)
     {
 //printf("PIGCSController::getMoving() failed, status %d", status);
-return status;
+		return status;
     }
 
     char* pStr;
@@ -649,6 +704,7 @@ asynStatus PIGCSController::getReferencedState(PIasynAxis* pAxis)
 {
 	char cmd[100];
 	char buf[255];
+
     sprintf(cmd, "FRF? %s", pAxis->m_szAxisName);
     asynStatus status = m_pInterface->sendAndReceive(cmd, buf, 99);;
     if (status != asynSuccess)

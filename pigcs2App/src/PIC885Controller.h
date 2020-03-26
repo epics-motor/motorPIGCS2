@@ -1,5 +1,5 @@
 /*
-FILENAME...     PIGCScontroller.h
+FILENAME...     PIC885Controller.h
 
 *************************************************************************
 * Copyright (c) 2011-2013 Physik Instrumente (PI) GmbH & Co. KG
@@ -12,8 +12,8 @@ Original Author: Steffen Rau
 Created: 15.12.2010
 */
 
-#ifndef PIGCSPIEZOCONTROLLER_H_
-#define PIGCSPIEZOCONTROLLER_H_
+#ifndef PIC885CONTROLLER_H_
+#define PIC885CONTROLLER_H_
 
 #include "PIGCSController.h"
 #include <asynDriver.h>
@@ -23,26 +23,27 @@ Created: 15.12.2010
  *
  * Main difference to motor controllers is the usage of absolute sensors.
  */
-class PIGCSPiezoController : public PIGCSController
+class PIC885Controller : public PIGCSController
 {
 public:
-	PIGCSPiezoController(PIInterface* pInterface, const char* szIDN)
+	PIC885Controller(PIInterface* pInterface, const char* szIDN)
 	: PIGCSController(pInterface, szIDN)
 	{
 	}
-	~PIGCSPiezoController() {}
+	~PIC885Controller() {}
 
 	virtual asynStatus init(void) { return PIGCSController::init(); }
 	virtual asynStatus initAxis(PIasynAxis* pAxis);
 	virtual asynStatus haltAxis(PIasynAxis* pAxis);
-
-    virtual asynStatus setAxisPosition(PIasynAxis* pAxis, double position);
+	virtual asynStatus setEnableAxis(PIasynAxis* pAxis, int axisEnableState);
     virtual asynStatus getStatus(PIasynAxis* pAxis, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl);
-    virtual asynStatus getReferencedState(PIasynAxis* pAxis);
+	virtual asynStatus referenceVelCts( PIasynAxis* pAxis, double velocity, int forwards);
+	virtual asynStatus hasReferenceSensor(PIasynAxis* pAxis);
+    virtual asynStatus hasLimitSwitches(PIasynAxis* pAxis);
 
 
 private:
 
 };
 
-#endif /* PIGCSPIEZOCONTROLLER_H_ */
+#endif /* PIC885CONTROLLER_H_ */

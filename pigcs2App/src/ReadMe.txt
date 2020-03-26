@@ -66,3 +66,13 @@ during homing. So the position cannot be updated during homing and will "jump" t
 position after homing is finished.
 
 
+ C-885
+=======
+
+Axis initialization: During the axis initialization the axis will be enabled. 
+                     In comparison to other PI controllers the servo control will not be turned on. 
+                     This is because of, depended on the drive type, it is not possible to turn on the 
+                     servo controller if the axis hasn’t be homed.
+Homing: After homing the axis and the servo control will always be enabled.
+
+

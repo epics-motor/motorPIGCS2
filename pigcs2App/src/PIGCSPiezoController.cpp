@@ -51,6 +51,14 @@ asynStatus PIGCSPiezoController::initAxis(PIasynAxis* pAxis)
 }
 
 /**
+ *  Currenty no Piezo controller supports this option ("RON" and "POS").
+ */
+asynStatus PIGCSPiezoController::setAxisPosition(PIasynAxis* pAxis, double position)
+{
+	return asynSuccess;
+}
+
+/**
  *  Currenty no Piezo controller supports "HLT".
  *  use STP - which will stop all axes...
  */

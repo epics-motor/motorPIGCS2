@@ -71,6 +71,8 @@ public:
     virtual asynStatus hasLimitSwitches(PIasynAxis* pAxis);
     virtual asynStatus hasReferenceSensor(PIasynAxis* pAxis);
     virtual asynStatus getReferencedState(PIasynAxis* axis);
+	virtual asynStatus setEnableAxis(PIasynAxis* pAxis, int axisEnableState);
+	virtual asynStatus getEnableAxis(PIasynAxis* pAxis, int& axisEnableState);
 
     virtual asynStatus SetPivotX(double value);
     virtual asynStatus SetPivotY(double value);

@@ -62,6 +62,8 @@ public:
     asynUser* m_pasynUser;
 
     bool m_bHasLimitSwitches;
+    bool m_bEnableAxisAfterHoming;
+    bool m_bSetServoAfterHoming;
     bool m_bHasReference;
     bool m_bProblem;
     bool m_bServoControl;

@@ -57,6 +57,8 @@ PIasynAxis::PIasynAxis(PIasynController *pController, PIGCSController* pGCSContr
 , m_bProblem(false)
 , m_bServoControl(false)
 , m_bMoving(false)
+, m_bEnableAxisAfterHoming(false)
+, m_bSetServoAfterHoming(false)
 , m_pGCSController(pGCSController)
 {
       if (szName != NULL)
@@ -129,6 +131,19 @@ asynStatus PIasynAxis::poll(bool *returnMoving)
 		    asynPrint(pasynUser_, ASYN_TRACE_ERROR, //FIXME: ASYN_TRACE_FLOW,
 		        "PIasynAxis::poll() axis %d referencing state changed, homed = %d\n",
 		        axisNo_, m_homed );
+			
+			if (1 == m_homed)
+			{
+				if (m_bEnableAxisAfterHoming)
+				{
+					m_pGCSController->setEnableAxis(this, 1);
+				}
+			
+				if (m_bSetServoAfterHoming)
+				{
+					m_pGCSController->setServo(this, 1);
+				}
+			}
 		}
 		if (m_bServoControl && servoControl == 0) // servo changed without user interaction!
 		{
