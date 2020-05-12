@@ -169,7 +169,7 @@ asynStatus PIGCSController::setAxisPositionCts(PIasynAxis* pAxis, double positio
 	double position = double(positionCts) * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
 
 	asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
-		"PIGCSController::setAxisPositionCts(, %d) \n", positionCts);
+		"PIGCSController::setAxisPositionCts(, %f) \n", positionCts);
 	return setAxisPosition(pAxis, position);
 }
 
@@ -711,7 +711,7 @@ asynStatus PIGCSController::getReferencedState(PIasynAxis* pAxis)
     {
     	return status;
     }
-    if (getValue(buf, pAxis->m_homed))
+    if (!getValue(buf, pAxis->m_homed))
     {
     	return asynError;
     }
@@ -786,6 +786,15 @@ bool PIGCSController::getValue(const char* szMsg, bool& value)
 		return false;
 	}
 	int ivalue = atoi(p+1);
-	value = (ivalue =! 0);
+	value = (ivalue != 0);
 	return true;
+}
+
+void PIGCSController::getStatusFromBitMask (long mask, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl)
+{
+    moving = (mask & 0x2000) ? 1 : 0;
+    homing = (mask & 0x4000) ? 1 : 0;
+    negLimit = (mask & 0x0001) ? 1 : 0;
+    posLimit = (mask & 0x0004) ? 1 : 0;
+    servoControl = (mask & 0x1000) ? 1 : 0;
 }
