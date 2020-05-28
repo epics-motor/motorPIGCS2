@@ -53,7 +53,9 @@ PIGCSController* PIGCSController::CreateGCSController(PIInterface* pInterface, c
 	{
 		return new PIGCSMotorController(pInterface, szIDN);
 	}
-	else if ( strstr(szIDN, "E-517") != NULL)
+	else if ( strstr(szIDN, "E-517") != NULL
+			||	strstr(szIDN, "E-518") != NULL
+		)
 	{
 		return new PIE517Controller(pInterface, szIDN);
 	}
