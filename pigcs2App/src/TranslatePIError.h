@@ -2,8 +2,9 @@
 #define _TRANSLATE_PI_ERROR_H
 
 #include <string>
+#include <epicsTypes.h>
 
-std::string TranslatePIError(int32_t error);
-bool TranslatePIError(int32_t error, char* szBuffer, uint32_t maxlen);
+std::string TranslatePIError(epicsInt32 error);
+bool TranslatePIError(epicsInt32 error, char* szBuffer, epicsUInt32 maxlen);
 
 #endif // _TRANSLATE_PI_ERROR_H
