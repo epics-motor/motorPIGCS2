@@ -23,10 +23,11 @@
 
 #include "picontrollererrors.h"
 #include <string>
+#include <cstring>
 #include <sstream>
+#include <epicsTypes.h>
 
-
-std::string TranslatePIError(int32_t error)
+std::string TranslatePIError(epicsInt32 error)
 {
     switch(error)
     {
@@ -2159,7 +2160,7 @@ std::string TranslatePIError(int32_t error)
     }
 }
 
-bool TranslatePIError(int32_t error, char* szBuffer, uint32_t maxlen)
+bool TranslatePIError(epicsInt32 error, char* szBuffer, epicsUInt32 maxlen)
 {
     std::string errmsg = TranslatePIError(error);
     if (errmsg.size() < maxlen)
