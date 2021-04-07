@@ -125,6 +125,7 @@ PIasynController::PIasynController(const char *portName, const char* asynPort, i
 	char* p = inputBuff;
 	while (*p != '\0') { *p = toupper(*p); p++; }
 
+
 	m_pGCSController = PIGCSController::CreateGCSController(pInterface, inputBuff);
 	if (NULL == m_pGCSController)
 	{

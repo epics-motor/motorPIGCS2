@@ -26,7 +26,8 @@ PI_GCS2Support_SRCS += PIHexapodController.cpp
 PI_GCS2Support_SRCS += PIGCS2_HexapodController.cpp
 PI_GCS2Support_SRCS += PIC702Controller.cpp
 PI_GCS2Support_SRCS += PIC885Controller.cpp
-PI_GCS2Support_SRCS += translateerror.c
+PI_GCS2Support_SRCS += PIGCSMotorControllerNoRefVel.cpp
+PI_GCS2Support_SRCS += TranslatePIError.cpp
 PI_GCS2Support_SRCS += PIInterface.cpp
 
 PI_GCS2Support_LIBS += motor

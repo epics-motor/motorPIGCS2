@@ -1,5 +1,5 @@
 /*
-FILENAME...     PIGCSMotorController.cpp
+FILENAME...     PIGCSMotorController.cpp 
 
 *************************************************************************
 * Copyright (c) 2011-2013 Physik Instrumente (PI) GmbH & Co. KG
@@ -8,7 +8,7 @@ FILENAME...     PIGCSMotorController.cpp
 *************************************************************************
 
 
-Original Author: Steffen Rau
+Original Author: Steffen Rau 
 Created: 15.12.2010
 */
 
@@ -54,18 +54,37 @@ asynStatus PIGCSMotorController::setAccelerationCts( PIasynAxis* pAxis, double a
 
 asynStatus PIGCSMotorController::referenceVelCts( PIasynAxis* pAxis, double velocity, int forwards)
 {
-    asynStatus status = setServo(pAxis, 1);
-    if (asynSuccess != status)
-        return status;
-
-    char cmd[100];
     if (velocity != 0)
     {
+		char cmd[100];
         velocity = fabs(velocity) * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
         sprintf(cmd,"SPA %s 0x50 %f", pAxis->m_szAxisName, velocity);
         m_pInterface->sendOnly(cmd);
-    }
 
+		int errorCode = getGCSError();
+		if (errorCode != 0)
+		{
+			asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
+					"PIGCSMotorController::referenceVelCts() failed\n");
+			epicsSnprintf(pAxis->m_pasynUser->errorMessage,pAxis->m_pasynUser->errorMessageSize,
+				"PIGCSMotorController::referenceVelCts() failed - GCS Error %d\n",errorCode);
+			return asynError;
+		}	
+    }
+	
+	return referenceAxis(pAxis, forwards);
+
+}
+
+asynStatus PIGCSMotorController::referenceAxis( PIasynAxis* pAxis, int forwards)
+{
+    asynStatus status = setServo(pAxis, 1);
+    if (asynSuccess != status)
+	{
+        return status;
+	}
+
+    char cmd[100];
     if (pAxis->m_bHasReference)
     {
         // call FRF - find reference
@@ -94,12 +113,16 @@ asynStatus PIGCSMotorController::referenceVelCts( PIasynAxis* pAxis, double velo
     }
     status = m_pInterface->sendOnly(cmd);
     if (asynSuccess != status)
+	{
         return status;
+	}
+	
     int errorCode = getGCSError();
     if (errorCode == 0)
     {
         return asynSuccess;
     }
+	
     asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
             "PIGCSMotorController::referenceVelCts() failed\n");
     epicsSnprintf(pAxis->m_pasynUser->errorMessage,pAxis->m_pasynUser->errorMessageSize,
@@ -141,14 +164,19 @@ asynStatus PIGCSMotorController::getStatus(PIasynAxis* pAxis, int& homing, int& 
     {
         return status;
     }
-    // TODO this is for C-863/867 controllers!!!!
-    // TODO support other controllers which do not understand #4 or have different bit masks
+    // TODO this is for a single axis C-863/867 controller!!!!
+    // TODO a) change it to multi-axis code.
+    // TODO b) support other controllers which do not understand #4 or have different bit masks
 
     int idx = 2 + pAxis->getAxisNo()*4;
     buf[idx+4] = '\0';
     char* szMask = buf+idx;
     long mask = strtol(szMask, NULL, 16);
-    getStatusFromBitMask (mask, homing, moving, negLimit, posLimit, servoControl);
+    moving = (mask & 0x2000) ? 1 : 0;
+    homing = (mask & 0x4000) ? 1 : 0;
+    negLimit = (mask & 0x0001) ? 1 : 0;
+    posLimit = (mask & 0x0004) ? 1 : 0;
+    servoControl = (mask & 0x1000) ? 1 : 0;
     asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW,
                "PIGCSMotorController::getStatus() buf:%s moving %d, svo: %d\n",
                buf, moving, servoControl);

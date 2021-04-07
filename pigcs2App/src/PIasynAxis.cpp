@@ -134,14 +134,21 @@ asynStatus PIasynAxis::poll(bool *returnMoving)
 			
 			if (1 == m_homed)
 			{
-				if (m_bEnableAxisAfterHoming)
+				if((m_pGCSController->IsGCS21()))
 				{
-					m_pGCSController->setEnableAxis(this, 1);
+					m_pGCSController->resetControlMode(this);
 				}
-			
-				if (m_bSetServoAfterHoming)
+				else
 				{
-					m_pGCSController->setServo(this, 1);
+					if (m_bEnableAxisAfterHoming)
+					{
+						m_pGCSController->setEnableAxis(this, 1);
+					}
+			
+					if (m_bSetServoAfterHoming)
+					{
+						m_pGCSController->setServo(this, 1);
+					}
 				}
 			}
 		}

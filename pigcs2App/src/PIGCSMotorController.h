@@ -42,6 +42,7 @@ public:
     virtual asynStatus getStatus(PIasynAxis* pAxis, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl);
 
 protected:
+	virtual asynStatus referenceAxis( PIasynAxis* pAxis, int forwards);
     enum
     {
     	PI_PARA_MOT_CURR_ACCEL		= 0x000000BUL,

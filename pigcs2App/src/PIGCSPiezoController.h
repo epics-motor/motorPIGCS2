@@ -8,7 +8,7 @@ FILENAME...     PIGCScontroller.h
 *************************************************************************
 
 
-Original Author: Steffen Rau
+Original Author: Steffen Rau 
 Created: 15.12.2010
 */
 
@@ -27,9 +27,7 @@ class PIGCSPiezoController : public PIGCSController
 {
 public:
 	PIGCSPiezoController(PIInterface* pInterface, const char* szIDN)
-        : PIGCSController (pInterface, szIDN)
-        , m_hasqFRF (true)
-        , m_hasqTRS (true)
+	: PIGCSController(pInterface, szIDN)
 	{
 	}
 	~PIGCSPiezoController() {}
@@ -41,12 +39,9 @@ public:
     virtual asynStatus setAxisPosition(PIasynAxis* pAxis, double position);
     virtual asynStatus getStatus(PIasynAxis* pAxis, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl);
     virtual asynStatus getReferencedState(PIasynAxis* pAxis);
-    virtual asynStatus referenceVelCts( PIasynAxis* pAxis, double velocity, int forwards);
 
 
 private:
-    bool m_hasqFRF; ///< is "FRF?" command available
-    bool m_hasqTRS; ///< is "TRS?" command available
 
 };
 

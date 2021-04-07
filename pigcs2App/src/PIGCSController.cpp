@@ -26,15 +26,13 @@ Created: 15.12.2010
 #include "PIGCS2_HexapodController.h"
 #include "PIC702Controller.h"
 #include "PIC885Controller.h"
+#include "PIGCSMotorControllerNoRefVel.h"
+#include "TranslatePIError.h"
 
 
 //#undef asynPrint
 //#define asynPrint(user,reason,format...) 0
 
-
-extern "C" {
-int TranslatePIError(const int error, char* szBuffer, const int maxlen);
-}
 
 
 /**
@@ -42,7 +40,12 @@ int TranslatePIError(const int error, char* szBuffer, const int maxlen);
  */
 PIGCSController* PIGCSController::CreateGCSController(PIInterface* pInterface, const char* szIDN)
 {
-	if ( 		strstr(szIDN, "C-663") != NULL
+	if (strstr(szIDN, "E-873.3QTU") != NULL
+		)
+	{
+		return new PIGCSMotorControllerNoRefVel(pInterface, szIDN);
+	}
+	else if ( 		strstr(szIDN, "C-663") != NULL
 			||	strstr(szIDN, "C-863") != NULL
 			||	strstr(szIDN, "C-867") != NULL
 			||	strstr(szIDN, "C-884") != NULL
@@ -53,9 +56,7 @@ PIGCSController* PIGCSController::CreateGCSController(PIInterface* pInterface, c
 	{
 		return new PIGCSMotorController(pInterface, szIDN);
 	}
-	else if ( strstr(szIDN, "E-517") != NULL
-			||	strstr(szIDN, "E-518") != NULL
-		)
+	else if ( strstr(szIDN, "E-517") != NULL)
 	{
 		return new PIE517Controller(pInterface, szIDN);
 	}
@@ -88,7 +89,7 @@ PIGCSController* PIGCSController::CreateGCSController(PIInterface* pInterface, c
 				||	strstr(szIDN, "C-887") != NULL
 		)
 	{
-		if (IsGCS2(pInterface))
+		if (IsGCSVersion(pInterface, 2.0))
 		{
 			return new PIGCS2_HexapodController(pInterface, szIDN);
 		}
@@ -103,7 +104,7 @@ PIGCSController* PIGCSController::CreateGCSController(PIInterface* pInterface, c
 	}
 }
 
-bool PIGCSController::IsGCS2(PIInterface* pInterface)
+bool PIGCSController::IsGCSVersion(PIInterface* pInterface, float version)
 {
 	char buf[256];
 	asynStatus status = pInterface->sendAndReceive("CSV?", buf, 255);
@@ -115,8 +116,9 @@ bool PIGCSController::IsGCS2(PIInterface* pInterface)
 	{
 		return false;
 	}
+
 	float csv = atof(buf);
-	return (csv >= 2.0);
+	return (csv >= version);
 }
 
 asynStatus PIGCSController::setVelocityCts( PIasynAxis* pAxis, double velocity )
@@ -171,7 +173,7 @@ asynStatus PIGCSController::setAxisPositionCts(PIasynAxis* pAxis, double positio
 	double position = double(positionCts) * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
 
 	asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
-		"PIGCSController::setAxisPositionCts(, %f) \n", positionCts);
+		"PIGCSController::setAxisPositionCts(, %d) \n", positionCts);
 	return setAxisPosition(pAxis, position);
 }
 
@@ -519,7 +521,9 @@ asynStatus PIGCSController::setEnableAxis(PIasynAxis* pAxis, int axisEnableState
 	
 	int errorCode = getGCSError();
     if (errorCode == 0)
+	{
     	return asynSuccess;
+	}
 
     asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
     		"PIGCSController::setEnableAxis() failed, GCS error %d\n", errorCode);
@@ -546,7 +550,7 @@ asynStatus PIGCSController::getEnableAxis(PIasynAxis* pAxis, int& axisEnableStat
 			return asynError;
 		}
 	
-    	return asynSuccess;
+		return asynSuccess;
 	}
 
     asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
@@ -561,7 +565,6 @@ asynStatus PIGCSController::getMoving(PIasynAxis* pAxis, int& moving)
     asynStatus status = m_pInterface->sendAndReceive(char(5), buf, 99);;
     if (status != asynSuccess)
     {
-//printf("PIGCSController::getMoving() failed, status %d", status);
 		return status;
     }
 
@@ -666,6 +669,9 @@ asynStatus PIGCSController::init(void)
 
 
 	status = findConnectedAxes();
+	m_IsGCS2  = true;
+	m_IsGCS21 = false;
+
 	return status;
 }
 
@@ -713,7 +719,7 @@ asynStatus PIGCSController::getReferencedState(PIasynAxis* pAxis)
     {
     	return status;
     }
-    if (!getValue(buf, pAxis->m_homed))
+    if (getValue(buf, pAxis->m_homed))
     {
     	return asynError;
     }
@@ -766,6 +772,18 @@ bool PIGCSController::getValue(const char* szMsg, double& value)
 		return false;
 	}
 	value = atof(p+1);
+
+	return true;
+}
+
+bool PIGCSController::getValue(const char* szMsg, unsigned int& value)
+{
+	const char* p = strstr(szMsg, "=");
+	if (p==NULL || *p == '\0')
+	{
+		return false;
+	}
+	value = strtol(p+1, NULL, 0);
 	return true;
 }
 
@@ -788,15 +806,6 @@ bool PIGCSController::getValue(const char* szMsg, bool& value)
 		return false;
 	}
 	int ivalue = atoi(p+1);
-	value = (ivalue != 0);
+	value = (ivalue =! 0);
 	return true;
-}
-
-void PIGCSController::getStatusFromBitMask (long mask, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl)
-{
-    moving = (mask & 0x2000) ? 1 : 0;
-    homing = (mask & 0x4000) ? 1 : 0;
-    negLimit = (mask & 0x0001) ? 1 : 0;
-    posLimit = (mask & 0x0004) ? 1 : 0;
-    servoControl = (mask & 0x1000) ? 1 : 0;
 }

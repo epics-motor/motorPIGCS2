@@ -1,6 +1,6 @@
 /*
-FILENAME...     PIGCScontroller.h
-
+FILENAME...     PIGCScontroller.h 
+ 
 *************************************************************************
 * Copyright (c) 2011-2013 Physik Instrumente (PI) GmbH & Co. KG
 * This file is distributed subject to the EPICS Open License Agreement
@@ -8,7 +8,7 @@ FILENAME...     PIGCScontroller.h
 *************************************************************************
 
 
-Original Author: Steffen Rau
+Original Author: Steffen Rau 
 Created: 15.12.2010
 */
 
@@ -43,6 +43,7 @@ public:
 
     bool getValue(const char* szMsg, double& value);
     bool getValue(const char* szMsg, int& value);
+    bool getValue(const char* szMsg, unsigned int& value);
     bool getValue(const char* szMsg, bool& value);
 
     virtual asynStatus setVelocityCts( PIasynAxis* pAxis, double velocity );
@@ -51,7 +52,7 @@ public:
 	virtual asynStatus move( PIasynAxis* pAxis, double target);
 	virtual asynStatus moveCts( PIasynAxis* pAxis, int target);
 	virtual asynStatus moveCts( PIasynAxis** pAxesArray, int* pTargetCtsArray, int numAxes);
-    virtual asynStatus referenceVelCts (PIasynAxis* pAxis, double velocity, int forwards) = 0;
+	virtual asynStatus referenceVelCts( PIasynAxis* pAxis, double velocity, int forwards) { return asynSuccess;	}
 	virtual asynStatus haltAxis(PIasynAxis* pAxis);
 
 
@@ -62,6 +63,7 @@ public:
     virtual asynStatus getAxisVelocity(PIasynAxis* pAxis);
     virtual asynStatus getAxisPositionCts(PIasynAxis* pAxis);
     virtual asynStatus setServo(PIasynAxis* pAxis, int servoState);
+    virtual asynStatus resetControlMode(PIasynAxis* pAxis){return asynSuccess;}
     virtual asynStatus getResolution(PIasynAxis* pAxis, double& resolution );
     virtual asynStatus getStatus(PIasynAxis* pAxis, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl) = 0;
     virtual asynStatus getGlobalState( asynMotorAxis** Axes, int numAxes ) { return asynSuccess; }
@@ -88,7 +90,8 @@ public:
     const char* getAxesID(size_t axisIdx) { return m_axesIDs[axisIdx]; }
     size_t getNrFoundAxes() { return m_nrFoundAxes; }
 
-    virtual bool IsGCS2() { return true; }
+    virtual bool IsGCS2() { return m_IsGCS2; }
+    virtual bool IsGCS21() { return m_IsGCS21; }
 
     int getGCSError();
 
@@ -97,16 +100,13 @@ public:
     PIInterface* m_pInterface;
     static const size_t MAX_NR_AXES = 64;
 	bool m_bAnyAxisMoving;
-
-    static void getStatusFromBitMask(long mask, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl);
-
 protected:
     asynStatus setGCSParameter(PIasynAxis* pAxis, unsigned int paramID, double value);
     asynStatus getGCSParameter(PIasynAxis* pAxis, unsigned int paramID, double& value);
 
     virtual asynStatus findConnectedAxes();
 
-    static bool IsGCS2(PIInterface* pInterface);
+    static bool IsGCSVersion(PIInterface* pInterface, float version);
 
 	char szIdentification[200];
 	int m_nrAxesOnController;
@@ -116,6 +116,8 @@ protected:
 	int m_LastError;
 
     bool m_KnowsVELcommand;
+	bool m_IsGCS2;
+	bool m_IsGCS21;
 };
 
 #endif /* PIGCSCONTROLLER_H_ */
