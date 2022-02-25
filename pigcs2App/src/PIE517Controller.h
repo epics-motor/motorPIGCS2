@@ -32,6 +32,8 @@ public:
 	PIE517Controller(PIInterface* pInterface, const char* szIDN)
 	: PIGCSPiezoController(pInterface, szIDN)
 	{
+		m_hasqFRF = false;
+		m_hasqTRS = false;
 	}
 	~PIE517Controller() {}
 
@@ -41,6 +43,7 @@ public:
 		// E-517 does support HLT with single axis
 		return PIGCSController::haltAxis(pAxis);
 	}
+	virtual asynStatus getStatus(PIasynAxis* pAxis, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl);
 
 private:
     asynStatus setOnline(int outputChannel, int onlineState);

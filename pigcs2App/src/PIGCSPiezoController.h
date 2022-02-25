@@ -44,7 +44,7 @@ public:
     virtual asynStatus referenceVelCts( PIasynAxis* pAxis, double velocity, int forwards);
 
 
-private:
+protected:
     bool m_hasqFRF; ///< is "FRF?" command available
     bool m_hasqTRS; ///< is "TRS?" command available
 

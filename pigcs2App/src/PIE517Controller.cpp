@@ -71,4 +71,17 @@ asynStatus PIE517Controller::getNrOutputChannels()
 
 }
 
-
+asynStatus PIE517Controller::getStatus(PIasynAxis* pAxis, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl)
+{
+	asynStatus status = getMoving(pAxis, moving);
+	if (status != asynSuccess)
+	{
+		return status;
+	}
+	
+	homing = 0;
+	negLimit = 0;
+	posLimit = 0;
+	
+	return status;
+}
