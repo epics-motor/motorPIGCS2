@@ -84,6 +84,10 @@ public:
     virtual double GetPivotY() { return 0.0; }
     virtual double GetPivotZ() { return 0.0; }
 
+    // Closed loop parameters
+    virtual asynStatus setCLAxisParam( PIasynAxis* pAxis, unsigned int paramID,  double wantedValue ){return asynSuccess;} 
+    virtual double getCLAxisParam( PIasynAxis* pAxis, unsigned int paramID){return 0.0;}
+
     virtual bool AcceptsNewTarget() { return true; }
     virtual bool CanCommunicateWhileHoming() { return true; }
 
@@ -121,6 +125,7 @@ protected:
     bool m_KnowsVELcommand;
 	bool m_IsGCS2;
 	bool m_IsGCS21;
+
 };
 
 #endif /* PIGCSCONTROLLER_H_ */

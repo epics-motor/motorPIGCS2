@@ -21,6 +21,7 @@ PI_GCS2Support_SRCS += PIGCSController.cpp
 PI_GCS2Support_SRCS += PIGCSMotorController.cpp
 PI_GCS2Support_SRCS += PIGCSPiezoController.cpp
 PI_GCS2Support_SRCS += PIE517Controller.cpp
+PI_GCS2Support_SRCS += PIE727Controller.cpp
 PI_GCS2Support_SRCS += PIE755Controller.cpp
 PI_GCS2Support_SRCS += PIHexapodController.cpp
 PI_GCS2Support_SRCS += PIGCS2_HexapodController.cpp

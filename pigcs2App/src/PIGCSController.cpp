@@ -21,6 +21,7 @@ Created: 15.12.2010
 #include "PIGCSMotorController.h"
 #include "PIGCSPiezoController.h"
 #include "PIE517Controller.h"
+#include "PIE727Controller.h"
 #include "PIE755Controller.h"
 #include "PIHexapodController.h"
 #include "PIGCS2_HexapodController.h"
@@ -70,10 +71,13 @@ PIGCSController* PIGCSController::CreateGCSController(PIInterface* pInterface, c
 				||	strstr(szIDN, "E-709") != NULL
 				||	strstr(szIDN, "E-712") != NULL
 				||	strstr(szIDN, "E-725") != NULL
-				||	strstr(szIDN, "E-727") != NULL
 				)
 	{
 		return new PIGCSPiezoController(pInterface, szIDN);
+	}	
+	else if ( strstr(szIDN, "E-727") != NULL)
+	{
+		return new PIE727Controller(pInterface, szIDN);
 	}
 	else if ( strstr(szIDN, "E-755") != NULL)
 	{

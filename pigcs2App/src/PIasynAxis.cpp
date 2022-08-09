@@ -112,6 +112,32 @@ PIasynAxis::~PIasynAxis()
 	}
 }
 
+void PIasynAxis::createCLParams(const char* axisName)
+{
+    pController_->createParam( (KP_String + axisName).c_str() ,  		  asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_KP);
+
+
+    // printf("------------------- createCLParams() axis %s %s ------------------- \r\n",KP_String,axisName );
+	
+    pController_->createParam( (KI_String + axisName).c_str(),		     asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_KI);
+    pController_->createParam( (KFF_String + axisName).c_str(),          asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_KFF);
+    pController_->createParam( (NTCHFR1_String + axisName).c_str(),      asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHFR1);
+    pController_->createParam( (NTCHFR2_String + axisName).c_str(),      asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHFR2);
+    pController_->createParam( (NTCHRJT1_String + axisName).c_str(),     asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHRJT1);
+    pController_->createParam( (NTCHRJT2_String + axisName).c_str(),     asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHRJT2);
+    pController_->createParam( (NTCHBDWDT1_String + axisName).c_str(),   asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHBDWDT1);
+    pController_->createParam( (NTCHBDWDT2_String + axisName).c_str(),   asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHBDWDT2);
+    pController_->createParam( (RBKP_String + axisName).c_str(),         asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBKP);
+    pController_->createParam( (RBKI_String + axisName).c_str(),         asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBKI);
+    pController_->createParam( (RBKFF_String + axisName).c_str(),        asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBKFF);
+    pController_->createParam( (RBNTCHFR1_String + axisName).c_str(),    asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHFR1);
+    pController_->createParam( (RBNTCHFR2_String + axisName).c_str(),    asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHFR2);
+    pController_->createParam( (RBNTCHRJT1_String + axisName).c_str(),   asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHRJT1);
+    pController_->createParam( (RBNTCHRJT2_String + axisName).c_str(),   asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHRJT2);
+    pController_->createParam( (RBNTCHBDWDT1_String + axisName).c_str(), asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHBDWDT1);
+    pController_->createParam( (RBNTCHBDWDT2_String + axisName).c_str(), asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHBDWDT2);    
+}
+
 asynStatus PIasynAxis::poll(bool *returnMoving)
 {
     int done = 0;
