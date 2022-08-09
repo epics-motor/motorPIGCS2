@@ -21,32 +21,38 @@ Created: 15.12.2010
 //#undef asynPrint
 //#define asynPrint(user,reason,format...) 0
 
-
 asynStatus PIGCSPiezoController::getStatus(PIasynAxis* pAxis, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl)
 {
     char cmd[100];
     char buf[255];
+    asynStatus status= asynSuccess;
+
     sprintf(cmd, "SRG? %s 1", pAxis->m_szAxisName);
-    asynStatus status = m_pInterface->sendAndReceive(cmd, buf, 99);
-    if (status != asynSuccess)
-    {
-        return status;
-    }
 
-    const char* p = strstr(buf, "=");
-    if (p==NULL || *p == '\0')
+    if (m_hasqSRG)
     {
-        return asynError;
-    }
+        status = m_pInterface->sendAndReceive(cmd, buf, 99);
+        if (status != asynSuccess)
+        {
+            m_hasqSRG=false;
+            return status;
+        }
 
-    long mask = strtol(p+1, NULL, 0);
-    getStatusFromBitMask (mask, homing, moving, negLimit, posLimit, servoControl);
-    // TODO: use parameter or "LIM?" to find out if stage has limit switches
-    negLimit = 0;
-    posLimit = 0;
-    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW,
-              "PIGCSPiezoController::getStatus() buf:%s moving %d, svo: %d\n",
-              buf, moving, servoControl);
+        const char* p = strstr(buf, "=");
+        if (p==NULL || *p == '\0')
+        {
+            return asynError;
+        }
+
+        long mask = strtol(p+1, NULL, 0);
+        getStatusFromBitMask (mask, homing, moving, negLimit, posLimit, servoControl);
+        // TODO: use parameter or "LIM?" to find out if stage has limit switches
+        negLimit = 0;
+        posLimit = 0;
+        asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW,
+                "PIGCSPiezoController::getStatus() buf:%s moving %d, svo: %d\n",
+                buf, moving, servoControl);
+    }
 
     return status;
 }

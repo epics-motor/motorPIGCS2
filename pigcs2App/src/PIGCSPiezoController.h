@@ -16,6 +16,7 @@ Created: 15.12.2010
 #define PIGCSPIEZOCONTROLLER_H_
 
 #include "PIGCSController.h"
+
 #include <asynDriver.h>
 
 /**
@@ -30,6 +31,7 @@ public:
         : PIGCSController (pInterface, szIDN)
         , m_hasqFRF (true)
         , m_hasqTRS (true)
+        , m_hasqSRG (true)
 	{
 	}
 	~PIGCSPiezoController() {}
@@ -38,15 +40,15 @@ public:
 	virtual asynStatus initAxis(PIasynAxis* pAxis);
 	virtual asynStatus haltAxis(PIasynAxis* pAxis);
 
-    virtual asynStatus setAxisPosition(PIasynAxis* pAxis, double position);
-    virtual asynStatus getStatus(PIasynAxis* pAxis, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl);
-    virtual asynStatus getReferencedState(PIasynAxis* pAxis);
-    virtual asynStatus referenceVelCts( PIasynAxis* pAxis, double velocity, int forwards);
-
+  virtual asynStatus setAxisPosition(PIasynAxis* pAxis, double position);
+  virtual asynStatus getStatus(PIasynAxis* pAxis, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl);
+  virtual asynStatus getReferencedState(PIasynAxis* pAxis);
+  virtual asynStatus referenceVelCts( PIasynAxis* pAxis, double velocity, int forwards);
 
 protected:
     bool m_hasqFRF; ///< is "FRF?" command available
     bool m_hasqTRS; ///< is "TRS?" command available
+    bool m_hasqSRG; ///< is "SRG?" command available
 
 };
 
