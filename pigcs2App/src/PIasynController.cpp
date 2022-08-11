@@ -155,12 +155,12 @@ PIasynController::PIasynController(const char *portName, const char* asynPort, i
     {
         pAxis  = new PIasynAxis(this, m_pGCSController, axis, m_pGCSController->getAxesID(axis));
         pAxis->Init(portName);
+
+        pAxis->createCLParams(m_pGCSController->getAxesID(axis));
     }
 
     startPoller(double(movingPollPeriod)/1000, double(idlePollPeriod)/1000, 10);
 }
-
-
 
 
 void PIasynController::report(FILE *fp, int level)
@@ -318,44 +318,59 @@ asynStatus PIasynController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
      * status at the end, but that's OK */
     status = pAxis->setDoubleParam(function, value);
     
-    if (function == PI_SUP_TARGET)
+    // Closed loop parameters
+    unsigned int cl_iter = 0;
+
+    for(cl_iter = 0; cl_iter < PIGCS2_CL_PARAM_QTT; cl_iter++)
     {
-    	printf("PI_SUP_TargetAO: %f for axis %d\n", value, pAxis->axisNo_);
+        if ( (function == pAxis->m_CloseLoopParam.CLParams_arr[cl_iter]) )
+        {
+            status = m_pGCSController->setCLAxisParam( pAxis, PI727_CL_PARAM_ADDR::All[cl_iter],  value );
+            break;
+        }
     }
-    else if (function == PI_SUP_PIVOT_X)
+    if (cl_iter < PIGCS2_CL_PARAM_QTT)
     {
-    	status = m_pGCSController->SetPivotX(value);
+        if (function == PI_SUP_TARGET)
+        {
+            printf("PI_SUP_TargetAO: %f for axis %d\n", value, pAxis->axisNo_);
+        }
+        else if (function == PI_SUP_PIVOT_X)
+        {
+            status = m_pGCSController->SetPivotX(value);
+        }
+        else if (function == PI_SUP_PIVOT_Y)
+        {
+            status = m_pGCSController->SetPivotY(value);
+        }
+        else if (function == PI_SUP_PIVOT_Z)
+        {
+            status = m_pGCSController->SetPivotZ(value);
+        }
+    //    else if (function == motorPosition_) // Entspricht das DFH ?
+    //    {
+    //  //      pAxis->enc_offset = (double) value - pAxis->nextpoint.axis[0].p;
+    //        asynPrint(pasynUser, ASYN_TRACE_FLOW,
+    //            "%s:%s: Set axis %d to position %d",
+    //            driverName, functionName, pAxis->axisNo_, value);
+    //    }
+        else if (function == motorResolution_ )
+        {
+            /* Call base class call its method (if we have our parameters check this here) */
+            status = asynMotorController::writeFloat64(pasynUser, value);
+        }
+        else if (function == motorEncoderRatio_)
+        {
+            /* Call base class call its method (if we have our parameters check this here) */
+            status = asynMotorController::writeFloat64(pasynUser, value);
+        }
+        else
+        {
+            /* Call base class call its method (if we have our parameters check this here) */
+            status = asynMotorController::writeFloat64(pasynUser, value);
+        }
     }
-    else if (function == PI_SUP_PIVOT_Y)
-    {
-    	status = m_pGCSController->SetPivotY(value);
-    }
-    else if (function == PI_SUP_PIVOT_Z)
-    {
-    	status = m_pGCSController->SetPivotZ(value);
-    }
-//    else if (function == motorPosition_) // Entspricht das DFH ?
-//    {
-//  //      pAxis->enc_offset = (double) value - pAxis->nextpoint.axis[0].p;
-//        asynPrint(pasynUser, ASYN_TRACE_FLOW,
-//            "%s:%s: Set axis %d to position %d",
-//            driverName, functionName, pAxis->axisNo_, value);
-//    }
-    else if (function == motorResolution_ )
-    {
-        /* Call base class call its method (if we have our parameters check this here) */
-        status = asynMotorController::writeFloat64(pasynUser, value);
-    }
-    else if (function == motorEncoderRatio_)
-    {
-        /* Call base class call its method (if we have our parameters check this here) */
-        status = asynMotorController::writeFloat64(pasynUser, value);
-    }
-    else
-    {
-        /* Call base class call its method (if we have our parameters check this here) */
-        status = asynMotorController::writeFloat64(pasynUser, value);
-    }
+    
     /* Do callbacks so higher layers see any changes */
     pAxis->callParamCallbacks();
     if (status) 
@@ -368,8 +383,6 @@ asynStatus PIasynController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
               driverName, functionName, function, value);
     return status;
 }
-
-
 
 
 asynStatus PIasynController::profileMove(asynUser *pasynUser, int npoints, double positions[], double times[], int relative, int trigger )
@@ -486,11 +499,23 @@ asynStatus PIasynController::configAxis(PIasynAxis *pAxis)
 
 asynStatus PIasynController::poll()
 {
+    PIasynAxis *pAxis;
+
     m_pGCSController->getGlobalState(pAxes_, numAxes_);
 
     setDoubleParam( 0, PI_SUP_RBPIVOT_X, m_pGCSController->GetPivotX());
     setDoubleParam( 0, PI_SUP_RBPIVOT_Y, m_pGCSController->GetPivotY());
     setDoubleParam( 0, PI_SUP_RBPIVOT_Z, m_pGCSController->GetPivotZ());
+
+    for (int axis=0; axis < this->numAxes_; axis++)
+    {
+        pAxis = getPIAxis(axis);
+
+        for(unsigned int param=0 ; param<PIGCS2_CL_PARAM_QTT ; param++)
+        {
+            setDoubleParam( 0, pAxis->m_CloseLoopParam.CLParams_arr[param+PIGCS2_CL_PARAM_QTT], m_pGCSController->getCLAxisParam(pAxis,PI727_CL_PARAM_ADDR::All[param]));
+        }
+    }
 
     setIntegerParam( 0, PI_SUP_LAST_ERR, m_pGCSController->GetLastError() );
 
