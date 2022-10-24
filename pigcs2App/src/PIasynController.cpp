@@ -329,24 +329,22 @@ asynStatus PIasynController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
             break;
         }
     }
-    if (cl_iter < PIGCS2_CL_PARAM_QTT)
+    if (function == PI_SUP_TARGET)
     {
-        if (function == PI_SUP_TARGET)
-        {
-            printf("PI_SUP_TargetAO: %f for axis %d\n", value, pAxis->axisNo_);
-        }
-        else if (function == PI_SUP_PIVOT_X)
-        {
-            status = m_pGCSController->SetPivotX(value);
-        }
-        else if (function == PI_SUP_PIVOT_Y)
-        {
-            status = m_pGCSController->SetPivotY(value);
-        }
-        else if (function == PI_SUP_PIVOT_Z)
-        {
-            status = m_pGCSController->SetPivotZ(value);
-        }
+        printf("PI_SUP_TargetAO: %f for axis %d\n", value, pAxis->axisNo_);
+    }
+    else if (function == PI_SUP_PIVOT_X)
+    {
+        status = m_pGCSController->SetPivotX(value);
+    }
+    else if (function == PI_SUP_PIVOT_Y)
+    {
+        status = m_pGCSController->SetPivotY(value);
+    }
+    else if (function == PI_SUP_PIVOT_Z)
+    {
+        status = m_pGCSController->SetPivotZ(value);
+    }
     //    else if (function == motorPosition_) // Entspricht das DFH ?
     //    {
     //  //      pAxis->enc_offset = (double) value - pAxis->nextpoint.axis[0].p;
@@ -354,21 +352,20 @@ asynStatus PIasynController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
     //            "%s:%s: Set axis %d to position %d",
     //            driverName, functionName, pAxis->axisNo_, value);
     //    }
-        else if (function == motorResolution_ )
-        {
-            /* Call base class call its method (if we have our parameters check this here) */
-            status = asynMotorController::writeFloat64(pasynUser, value);
-        }
-        else if (function == motorEncoderRatio_)
-        {
-            /* Call base class call its method (if we have our parameters check this here) */
-            status = asynMotorController::writeFloat64(pasynUser, value);
-        }
-        else
-        {
-            /* Call base class call its method (if we have our parameters check this here) */
-            status = asynMotorController::writeFloat64(pasynUser, value);
-        }
+    else if (function == motorResolution_ )
+    {
+        /* Call base class call its method (if we have our parameters check this here) */
+        status = asynMotorController::writeFloat64(pasynUser, value);
+    }
+    else if (function == motorEncoderRatio_)
+    {
+        /* Call base class call its method (if we have our parameters check this here) */
+        status = asynMotorController::writeFloat64(pasynUser, value);
+    }
+    else
+    {
+        /* Call base class call its method (if we have our parameters check this here) */
+        status = asynMotorController::writeFloat64(pasynUser, value);
     }
     
     /* Do callbacks so higher layers see any changes */
