@@ -329,7 +329,7 @@ asynStatus PIasynController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
             break;
         }
     }
-    if (cl_iter < PIGCS2_CL_PARAM_QTT)
+    if (cl_iter >= PIGCS2_CL_PARAM_QTT)
     {
         if (function == PI_SUP_TARGET)
         {
