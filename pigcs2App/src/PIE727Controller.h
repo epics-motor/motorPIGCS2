@@ -44,11 +44,10 @@ class PIE727Controller : public PIGCSPiezoController
 
 		asynStatus setGCSCmdLvl(unsigned int cmdLvl);
 		
-		const unsigned int m_CCL_ADVANCED_ID = 1;   // advanced user ID
-		const unsigned int m_CCL_DEFAULT_ID  = 0;   // default user ID
+		unsigned int m_CCL_ADVANCED_ID;   // advanced user ID
+		unsigned int m_CCL_DEFAULT_ID;   // default user ID
 
-
-		const char *m_CCL_ADVANCED_PWD  = "advanced";   // default user ID
+		char m_CCL_ADVANCED_PWD[9];   // advanced user password
 };
 
 #endif /* PIE727CONTROLLER_H_ */

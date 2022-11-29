@@ -23,6 +23,10 @@ Created: 15.12.2010
 PIE727Controller::PIE727Controller(PIInterface* pInterface, const char* szIDN)
 : PIGCSPiezoController (pInterface, szIDN)
 {
+    this->m_CCL_ADVANCED_ID = 1;   // advanced user ID
+    this->m_CCL_DEFAULT_ID  = 0;   // default user ID
+    strcpy(this->m_CCL_ADVANCED_PWD, "advanced");   // advanced user password
+    
     this->m_hasqFRF=false; ///< is "FRF?" command available
     this->m_hasqTRS=false; ///< is "TRS?" command available
     this->m_hasqSRG=false;
