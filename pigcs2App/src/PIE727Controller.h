@@ -47,7 +47,7 @@ class PIE727Controller : public PIGCSPiezoController
 		unsigned int m_CCL_ADVANCED_ID;   // advanced user ID
 		unsigned int m_CCL_DEFAULT_ID;   // default user ID
 
-		char m_CCL_ADVANCED_PWD[8];   // advanced user password
+		char m_CCL_ADVANCED_PWD[9];   // advanced user password
 };
 
 #endif /* PIE727CONTROLLER_H_ */
