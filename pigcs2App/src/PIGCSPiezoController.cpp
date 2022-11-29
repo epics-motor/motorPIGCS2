@@ -52,6 +52,26 @@ asynStatus PIGCSPiezoController::getStatus(PIasynAxis* pAxis, int& homing, int& 
         asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW,
                 "PIGCSPiezoController::getStatus() buf:%s moving %d, svo: %d\n",
                 buf, moving, servoControl);
+    } else {
+        // Do what the piezo class used to do before the SRG check was added
+        
+        status = getMoving(pAxis, moving);
+        if (status != asynSuccess)
+        {
+            return status;
+        }
+
+        homing = 0;
+        negLimit = 0;
+        posLimit = 0;
+        
+        sprintf(cmd, "SVO? %s", pAxis->m_szAxisName);
+        status = m_pInterface->sendAndReceive(cmd, buf, 99);
+        if (status != asynSuccess)
+        {
+            return status;
+        } 
+        getValue(buf, servoControl);
     }
 
     return status;
