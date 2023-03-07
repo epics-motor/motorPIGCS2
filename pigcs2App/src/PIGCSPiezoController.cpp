@@ -41,6 +41,7 @@ asynStatus PIGCSPiezoController::getStatus(PIasynAxis* pAxis, int& homing, int& 
         const char* p = strstr(buf, "=");
         if (p==NULL || *p == '\0')
         {
+            m_hasqSRG = false;
             return asynError;
         }
 
