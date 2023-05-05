@@ -168,7 +168,7 @@ void PIasynController::report(FILE *fp, int level)
     int axis;
     PIasynAxis *pAxis;
 
-    fprintf(fp, "Simulation motor driver %s, numAxes=%d\n", 
+    fprintf(fp, "PIGCS2 motor driver %s, numAxes=%d\n", 
         this->portName, this->numAxes_);
 
     for (axis=0; axis<this->numAxes_; axis++)
