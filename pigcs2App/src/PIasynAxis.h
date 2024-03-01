@@ -42,7 +42,7 @@ public:
     virtual asynStatus setPosition(double position);
 
 
-    void createCLParams(const char* axisName);
+    void createCLParams(const int axis);
 
     char* m_szAxisName;			///< GCS name
 
@@ -72,7 +72,9 @@ public:
     bool m_bEnableAxisAfterHoming;
     bool m_bSetServoAfterHoming;
     int m_movingStateMask;
+
     u_PIGCS2PiezoCLParams m_CloseLoopParam;
+    PIGCS2PiezoCLValues m_CloseLoopValue;
 
     friend class PIasynController;
 private:

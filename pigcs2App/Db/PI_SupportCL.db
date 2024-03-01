@@ -1,411 +1,167 @@
-record(ao, "$(P)KP_X")
+record(ao, "$(P)$(M)KP")
 {
    field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_KP_1")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_KP_$(ADDR)")
    field(PREC, "5")
 }
 
-record(ao, "$(P)KI_X")
+record(ao, "$(P)$(M)KI")
 {
    field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_KI_1")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_KI_$(ADDR)")
    field(PREC, "5")
 }
 
-record(ao, "$(P)KFF_X")
+record(ao, "$(P)$(M)KFF")
 {
    field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_KFF_1")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_KFF_$(ADDR)")
    field(PREC, "5")
 }
 
-record(ao, "$(P)NTCHFR1_X")
+record(ao, "$(P)$(M)NTCHFR1")
 {
    field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHFR1_1")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_NTCHFR1_$(ADDR)")
    field(PREC, "5")
 }
 
-record(ao, "$(P)NTCHFR2_X")
+record(ao, "$(P)$(M)NTCHFR2")
 {
    field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHFR2_1")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_NTCHFR2_$(ADDR)")
    field(PREC, "5")
 }
 
-record(ao, "$(P)NTCHRJT1_X")
+record(ao, "$(P)$(M)NTCHRJT1")
 {
    field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHRJT1_1")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_NTCHRJT1_$(ADDR)")
    field(PREC, "5")
 }
 
-record(ao, "$(P)NTCHRJT2_X")
+record(ao, "$(P)$(M)NTCHRJT2")
 {
    field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHRJT2_1")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_NTCHRJT2_$(ADDR)")
    field(PREC, "5")
 }
 
-record(ao, "$(P)NTCHBDWDT1_X")
+record(ao, "$(P)$(M)NTCHBDWDT1")
 {
    field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHBDWDT1_1")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_NTCHBDWDT1_$(ADDR)")
    field(PREC, "5")
 }
 
-record(ao, "$(P)NTCHBDWDT2_X")
+record(ao, "$(P)$(M)NTCHBDWDT2")
 {
    field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHBDWDT2_1")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_NTCHBDWDT2_$(ADDR)")
    field(PREC, "5")
 }
 
-record(ai, "$(P)RBKP_X")
+record(ao, "$(P)$(M)ANALOGINPUT")
 {
-	field(PINI, "1")
+   field(DESC,"Set Analog Target Input")
+   field(ASG,"Reserved")
+   field(DTYP, "asynFloat64")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_ANALOGTARGET_$(ADDR)")
+}
+
+record(ai, "$(P)$(M)RBKP")
+{
 	field(DTYP, "asynFloat64")
-	field(INP, "@asyn($(PORT),0,0)PI_SUP_RBKP_1")
+	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_RBKP_$(ADDR)")
 	field(PREC, "5")
 	field(SCAN, "I/O Intr")
 }
 
-record(ai, "$(P)RBKI_X")
+record(ai, "$(P)$(M)RBKI")
 {
-	field(PINI, "1")
 	field(DTYP, "asynFloat64")
-	field(INP, "@asyn($(PORT),0,0)PI_SUP_RBKI_1")
+	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_RBKI_$(ADDR)")
 	field(PREC, "5")
 	field(SCAN, "I/O Intr")
 }
 
-record(ai, "$(P)RBKFF_X")
+record(ai, "$(P)$(M)RBKFF")
 {
    field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBKFF_1")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_RBKFF_$(ADDR)")
    field(PREC, "5")
 	field(SCAN, "I/O Intr")
 }
 
-record(ai, "$(P)RBNTCHFR1_X")
+record(ai, "$(P)$(M)RBNTCHFR1")
 {
    field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHFR1_1")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_RBNTCHFR1_$(ADDR)")
    field(PREC, "5")
 	field(SCAN, "I/O Intr")
 }
 
-record(ai, "$(P)RBNTCHFR2_X")
+record(ai, "$(P)$(M)RBNTCHFR2")
 {
    field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHFR2_1")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_RBNTCHFR2_$(ADDR)")
    field(PREC, "5")
 	field(SCAN, "I/O Intr")
 }
 
-record(ai, "$(P)RBNTCHRJT1_X")
+record(ai, "$(P)$(M)RBNTCHRJT1")
 {
    field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHRJT1_1")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_RBNTCHRJT1_$(ADDR)")
    field(PREC, "5")
 	field(SCAN, "I/O Intr")
 }
 
-record(ai, "$(P)RBNTCHRJT2_X")
+record(ai, "$(P)$(M)RBNTCHRJT2")
 {
    field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHRJT2_1")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_RBNTCHRJT2_$(ADDR)")
    field(PREC, "5")
 	field(SCAN, "I/O Intr")
 }
 
-record(ai, "$(P)RBNTCHBDWDT1_X")
+record(ai, "$(P)$(M)RBNTCHBDWDT1")
 {
    field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHBDWDT1_1")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_RBNTCHBDWDT1_$(ADDR)")
    field(PREC, "5")
 	field(SCAN, "I/O Intr")
 }
 
-record(ai, "$(P)RBNTCHBDWDT2_X")
+record(ai, "$(P)$(M)RBNTCHBDWDT2")
 {
    field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHBDWDT2_1")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_RBNTCHBDWDT2_$(ADDR)")
    field(PREC, "5")
 	field(SCAN, "I/O Intr")
 }
 
-record(ao, "$(P)KP_Y")
+record(ai, "$(P)$(M)RBANALOGINPUT")
 {
+   field(DESC,"Read Analog Target Input")
    field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_KP_2")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)KI_Y")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_KI_2")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)KFF_Y")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_KFF_2")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)NTCHFR1_Y")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHFR1_2")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)NTCHFR2_Y")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHFR2_2")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)NTCHRJT1_Y")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHRJT1_2")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)NTCHRJT2_Y")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHRJT2_2")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)NTCHBDWDT1_Y")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHBDWDT1_2")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)NTCHBDWDT2_Y")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHBDWDT2_2")
-   field(PREC, "5")
-}
-
-record(ai, "$(P)RBKP_Y")
-{
-	field(PINI, "1")
-	field(DTYP, "asynFloat64")
-	field(INP, "@asyn($(PORT),0,0)PI_SUP_RBKP_2")
-	field(PREC, "5")
-	field(SCAN, "I/O Intr")
-}
-
-record(ai, "$(P)RBKI_Y")
-{
-	field(PINI, "1")
-	field(DTYP, "asynFloat64")
-	field(INP, "@asyn($(PORT),0,0)PI_SUP_RBKI_2")
-	field(PREC, "5")
-	field(SCAN, "I/O Intr")
-}
-
-record(ai, "$(P)RBKFF_Y")
-{
-   field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBKFF_2")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_RBANALOGTARGET_$(ADDR)")
    field(PREC, "5")
 	field(SCAN, "I/O Intr")
 }
 
-record(ai, "$(P)RBNTCHFR1_Y")
+record(bi, "$(P)$(M)RBONT")
 {
-   field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHFR1_2")
-   field(PREC, "5")
+   field(DESC,"Read On-Target")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_RBONT_$(ADDR)")
 	field(SCAN, "I/O Intr")
 }
 
-record(ai, "$(P)RBNTCHFR2_Y")
+record(bi, "$(P)$(M)RBOVF")
 {
-   field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHFR2_2")
-   field(PREC, "5")
-	field(SCAN, "I/O Intr")
-}
-
-record(ai, "$(P)RBNTCHRJT1_Y")
-{
-   field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHRJT1_2")
-   field(PREC, "5")
-	field(SCAN, "I/O Intr")
-}
-
-record(ai, "$(P)RBNTCHRJT2_Y")
-{
-   field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHRJT2_2")
-   field(PREC, "5")
-	field(SCAN, "I/O Intr")
-}
-
-record(ai, "$(P)RBNTCHBDWDT1_Y")
-{
-   field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHBDWDT1_2")
-   field(PREC, "5")
-	field(SCAN, "I/O Intr")
-}
-
-record(ai, "$(P)RBNTCHBDWDT2_Y")
-{
-   field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHBDWDT2_2")
-   field(PREC, "5")
-	field(SCAN, "I/O Intr")
-}
-
-
-record(ao, "$(P)KP_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_KP_3")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)KI_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_KI_3")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)KFF_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_KFF_3")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)NTCHFR1_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHFR1_3")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)NTCHFR2_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHFR2_3")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)NTCHRJT1_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHRJT1_3")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)NTCHRJT2_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHRJT2_3")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)NTCHBDWDT1_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHBDWDT1_3")
-   field(PREC, "5")
-}
-
-record(ao, "$(P)NTCHBDWDT2_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(OUT,  "@asyn($(PORT),0,0)PI_SUP_NTCHBDWDT2_3")
-   field(PREC, "5")
-}
-
-record(ai, "$(P)RBKP_Z")
-{
-	field(PINI, "1")
-	field(DTYP, "asynFloat64")
-	field(INP, "@asyn($(PORT),0,0)PI_SUP_RBKP_3")
-	field(PREC, "5")
-	field(SCAN, "I/O Intr")
-}
-
-record(ai, "$(P)RBKI_Z")
-{
-	field(PINI, "1")
-	field(DTYP, "asynFloat64")
-	field(INP, "@asyn($(PORT),0,0)PI_SUP_RBKI_3")
-	field(PREC, "5")
-	field(SCAN, "I/O Intr")
-}
-
-record(ai, "$(P)RBKFF_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBKFF_3")
-   field(PREC, "5")
-	field(SCAN, "I/O Intr")
-}
-
-record(ai, "$(P)RBNTCHFR1_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHFR1_3")
-   field(PREC, "5")
-	field(SCAN, "I/O Intr")
-}
-
-record(ai, "$(P)RBNTCHFR2_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHFR2_3")
-   field(PREC, "5")
-	field(SCAN, "I/O Intr")
-}
-
-record(ai, "$(P)RBNTCHRJT1_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHRJT1_3")
-   field(PREC, "5")
-	field(SCAN, "I/O Intr")
-}
-
-record(ai, "$(P)RBNTCHRJT2_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHRJT2_3")
-   field(PREC, "5")
-	field(SCAN, "I/O Intr")
-}
-
-record(ai, "$(P)RBNTCHBDWDT1_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHBDWDT1_3")
-   field(PREC, "5")
-	field(SCAN, "I/O Intr")
-}
-
-record(ai, "$(P)RBNTCHBDWDT2_Z")
-{
-   field(DTYP, "asynFloat64")
-   field(INP,  "@asyn($(PORT),0,0)PI_SUP_RBNTCHBDWDT2_3")
-   field(PREC, "5")
+   field(DESC,"Read Over Flow")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PI_SUP_RBOVF_$(ADDR)")
 	field(SCAN, "I/O Intr")
 }

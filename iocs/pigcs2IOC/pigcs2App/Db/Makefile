@@ -9,11 +9,15 @@ include $(TOP)/configure/CONFIG
 
 ifdef MOTOR_PIGCS2
 ### this module was built outside motor
+DB_INSTALLS += $(MOTOR_PIGCS2)/db/PI_SupportError.db
 DB_INSTALLS += $(MOTOR_PIGCS2)/db/PI_SupportCtrl.db
+DB_INSTALLS += $(MOTOR_PIGCS2)/db/PI_SupportCL.db
 DB_INSTALLS += $(MOTOR_PIGCS2)/db/PI_Support.db
 else
 ### this module was built inside motor/modules
+DB_INSTALLS += $(MOTOR)/db/PI_SupportError.db
 DB_INSTALLS += $(MOTOR)/db/PI_SupportCtrl.db
+DB_INSTALLS += $(MOTOR)/db/PI_SupportCL.db
 DB_INSTALLS += $(MOTOR)/db/PI_Support.db
 endif
 

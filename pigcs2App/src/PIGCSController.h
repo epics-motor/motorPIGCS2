@@ -62,6 +62,7 @@ public:
     virtual asynStatus getAxisPosition(PIasynAxis* pAxis, double& position);
     virtual asynStatus getAxisVelocity(PIasynAxis* pAxis);
     virtual asynStatus getAxisPositionCts(PIasynAxis* pAxis);
+    virtual asynStatus getServo(PIasynAxis* pAxis,int& servoState);
     virtual asynStatus setServo(PIasynAxis* pAxis, int servoState);
     virtual asynStatus resetControlMode(PIasynAxis* pAxis){return asynSuccess;}
     virtual asynStatus getResolution(PIasynAxis* pAxis, double& resolution );
@@ -88,6 +89,9 @@ public:
     virtual asynStatus setCLAxisParam( PIasynAxis* pAxis, unsigned int paramID,  double wantedValue ){return asynSuccess;} 
     virtual double getCLAxisParam( PIasynAxis* pAxis, unsigned int paramID){return 0.0;}
 
+    virtual asynStatus getAxisOnt(PIasynAxis* pAxis, int& value){return asynSuccess;}
+    virtual asynStatus getAxisOvf(PIasynAxis* pAxis, int& value){return asynSuccess;}
+
     virtual bool AcceptsNewTarget() { return true; }
     virtual bool CanCommunicateWhileHoming() { return true; }
 
@@ -104,6 +108,7 @@ public:
     PIInterface* m_pInterface;
     static const size_t MAX_NR_AXES = 64;
 	bool m_bAnyAxisMoving;
+    int m_LastError;
 
     static void getStatusFromBitMask(long mask, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl);
 
@@ -120,7 +125,6 @@ protected:
 	char* m_axesIDs[MAX_NR_AXES];
 	size_t m_nrFoundAxes;
 	char m_allAxesIDs[255];
-	int m_LastError;
 
     bool m_KnowsVELcommand;
 	bool m_IsGCS2;

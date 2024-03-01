@@ -39,6 +39,9 @@ class PIE727Controller : public PIGCSPiezoController
 
 		virtual asynStatus setCLAxisParam( PIasynAxis* pAxis, unsigned int paramID,  double wantedValue );
 		virtual double getCLAxisParam( PIasynAxis* pAxis, unsigned int paramID);
+
+		virtual asynStatus getAxisOnt(PIasynAxis* pAxis, int& value);
+		virtual asynStatus getAxisOvf(PIasynAxis* pAxis, int& value);
 		
 	private:
 

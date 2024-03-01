@@ -65,6 +65,7 @@ PIasynController::PIasynController(const char *portName, const char* asynPort, i
     createParam(PI_SUP_TARGET_String,		asynParamFloat64,	&PI_SUP_TARGET);
     createParam(PI_SUP_SERVO_String,		asynParamInt32,		&PI_SUP_SERVO);
     createParam(PI_SUP_LAST_ERR_String,		asynParamInt32,		&PI_SUP_LAST_ERR);
+    createParam(PI_SUP_CLEAR_ERR_String,	asynParamInt32,		&PI_SUP_CLEAR_ERR);
     createParam(PI_SUP_PIVOT_X_String,		asynParamFloat64,	&PI_SUP_PIVOT_X);
     createParam(PI_SUP_PIVOT_Y_String,		asynParamFloat64,	&PI_SUP_PIVOT_Y);
     createParam(PI_SUP_PIVOT_Z_String,		asynParamFloat64,	&PI_SUP_PIVOT_Z);
@@ -156,7 +157,7 @@ PIasynController::PIasynController(const char *portName, const char* asynPort, i
         pAxis  = new PIasynAxis(this, m_pGCSController, axis, m_pGCSController->getAxesID(axis));
         pAxis->Init(portName);
 
-        pAxis->createCLParams(m_pGCSController->getAxesID(axis));
+        pAxis->createCLParams(axis);
     }
 
     startPoller(double(movingPollPeriod)/1000, double(idlePollPeriod)/1000, 10);
@@ -261,7 +262,7 @@ asynStatus PIasynController::writeInt32(asynUser *pasynUser, epicsInt32 value)
      * status at the end, but that's OK */
     status = pAxis->setIntegerParam(function, value);
     
-    if (function == motorClosedLoop_)
+    if (function == motorClosedLoop_ || function == PI_SUP_SERVO)
     {
         asynPrint(pasynUser, ASYN_TRACE_FLOW,
         		"%s:%s: %sing Closed-Loop Control flag on driver %s\n",
@@ -281,7 +282,13 @@ asynStatus PIasynController::writeInt32(asynUser *pasynUser, epicsInt32 value)
             processDeferredMoves();
         }
         this->movesDeferred = value;
-    } else {
+    }
+    else if (function == PI_SUP_CLEAR_ERR)
+    {   
+		m_pGCSController->m_LastError = 0;
+        setIntegerParam(0, PI_SUP_LAST_ERR, m_pGCSController->GetLastError() );
+    }
+    else {
         /* Call base class call its method (if we have our parameters check this here) */
         status = asynMotorController::writeInt32(pasynUser, value);
     }
@@ -332,8 +339,9 @@ asynStatus PIasynController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
     if (cl_iter >= PIGCS2_CL_PARAM_QTT)
     {
         if (function == PI_SUP_TARGET)
-        {
-            printf("PI_SUP_TargetAO: %f for axis %d\n", value, pAxis->axisNo_);
+        {   
+            status = m_pGCSController->move(pAxis, value);
+            //printf("PI_SUP_TargetAO: %f for axis %d\n", value, pAxis->axisNo_);
         }
         else if (function == PI_SUP_PIVOT_X)
         {

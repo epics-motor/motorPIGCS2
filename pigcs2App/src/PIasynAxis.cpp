@@ -112,30 +112,35 @@ PIasynAxis::~PIasynAxis()
 	}
 }
 
-void PIasynAxis::createCLParams(const char* axisName)
-{
-    pController_->createParam( (KP_String + axisName).c_str() ,  		  asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_KP);
-
-
+void PIasynAxis::createCLParams(const int axis)
+{	
+	char axisName[2];
+	sprintf(axisName,"%d",axis);
     // printf("------------------- createCLParams() axis %s %s ------------------- \r\n",KP_String,axisName );
-	
-    pController_->createParam( (KI_String + axisName).c_str(),		     asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_KI);
-    pController_->createParam( (KFF_String + axisName).c_str(),          asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_KFF);
-    pController_->createParam( (NTCHFR1_String + axisName).c_str(),      asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHFR1);
-    pController_->createParam( (NTCHFR2_String + axisName).c_str(),      asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHFR2);
-    pController_->createParam( (NTCHRJT1_String + axisName).c_str(),     asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHRJT1);
-    pController_->createParam( (NTCHRJT2_String + axisName).c_str(),     asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHRJT2);
-    pController_->createParam( (NTCHBDWDT1_String + axisName).c_str(),   asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHBDWDT1);
-    pController_->createParam( (NTCHBDWDT2_String + axisName).c_str(),   asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHBDWDT2);
-    pController_->createParam( (RBKP_String + axisName).c_str(),         asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBKP);
-    pController_->createParam( (RBKI_String + axisName).c_str(),         asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBKI);
-    pController_->createParam( (RBKFF_String + axisName).c_str(),        asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBKFF);
-    pController_->createParam( (RBNTCHFR1_String + axisName).c_str(),    asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHFR1);
-    pController_->createParam( (RBNTCHFR2_String + axisName).c_str(),    asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHFR2);
-    pController_->createParam( (RBNTCHRJT1_String + axisName).c_str(),   asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHRJT1);
-    pController_->createParam( (RBNTCHRJT2_String + axisName).c_str(),   asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHRJT2);
-    pController_->createParam( (RBNTCHBDWDT1_String + axisName).c_str(), asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHBDWDT1);
-    pController_->createParam( (RBNTCHBDWDT2_String + axisName).c_str(), asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHBDWDT2);    
+
+	pController_->createParam( (KP_String + axisName).c_str() ,  		  	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_KP);
+    pController_->createParam( (KI_String + axisName).c_str(),		     	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_KI);
+    pController_->createParam( (KFF_String + axisName).c_str(),          	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_KFF);
+    pController_->createParam( (NTCHFR1_String + axisName).c_str(),      	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHFR1);
+    pController_->createParam( (NTCHFR2_String + axisName).c_str(),      	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHFR2);
+    pController_->createParam( (NTCHRJT1_String + axisName).c_str(),     	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHRJT1);
+    pController_->createParam( (NTCHRJT2_String + axisName).c_str(),     	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHRJT2);
+    pController_->createParam( (NTCHBDWDT1_String + axisName).c_str(),   	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHBDWDT1);
+    pController_->createParam( (NTCHBDWDT2_String + axisName).c_str(),   	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHBDWDT2);
+	pController_->createParam( (ANALOGTARGET_String + axisName).c_str(), 	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_ANALOGTARGET);
+    pController_->createParam( (RBKP_String + axisName).c_str(),         	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBKP);
+    pController_->createParam( (RBKI_String + axisName).c_str(),         	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBKI);
+    pController_->createParam( (RBKFF_String + axisName).c_str(),        	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBKFF);
+    pController_->createParam( (RBNTCHFR1_String + axisName).c_str(),    	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHFR1);
+    pController_->createParam( (RBNTCHFR2_String + axisName).c_str(),    	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHFR2);
+    pController_->createParam( (RBNTCHRJT1_String + axisName).c_str(),   	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHRJT1);
+    pController_->createParam( (RBNTCHRJT2_String + axisName).c_str(),   	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHRJT2);
+    pController_->createParam( (RBNTCHBDWDT1_String + axisName).c_str(), 	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHBDWDT1);
+    pController_->createParam( (RBNTCHBDWDT2_String + axisName).c_str(), 	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHBDWDT2);
+	pController_->createParam( (RBANALOGTARGET_String + axisName).c_str(),	asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBANALOGTARGET);
+
+	pController_->createParam( (RBONT_String + axisName).c_str(),        	asynParamInt32,    &m_CloseLoopValue.PI_SUP_RBONT);
+	pController_->createParam( (RBOVF_String + axisName).c_str(),        	asynParamInt32,    &m_CloseLoopValue.PI_SUP_RBOVF);
 }
 
 asynStatus PIasynAxis::poll(bool *returnMoving)
@@ -145,6 +150,7 @@ asynStatus PIasynAxis::poll(bool *returnMoving)
     int moving, negLimit, posLimit, servoControl;
     int oldHoming = m_isHoming;
     m_pGCSController->getStatus(this, m_isHoming, moving, negLimit, posLimit, servoControl);
+	m_pGCSController->getServo(this, servoControl);
     if (moving == 0 && m_isHoming == 0)
     	done = 1;
 
@@ -189,7 +195,23 @@ asynStatus PIasynAxis::poll(bool *returnMoving)
 			double realPosition;
 			m_pGCSController->getAxisPosition(this, realPosition);
 			setDoubleParam(pController_->PI_SUP_POSITION,      realPosition );
+
+			int axisont;
+			m_pGCSController->getAxisOnt(this, axisont);
+			setIntegerParam(m_CloseLoopValue.PI_SUP_RBONT,axisont);
+
+			int axisovf = 0;
+			m_pGCSController->getAxisOvf(this, axisovf);
+			setIntegerParam(m_CloseLoopValue.PI_SUP_RBOVF,axisovf);
+
+			for(unsigned int param=0 ; param<PIGCS2_CL_PARAM_QTT ; param++)
+			{
+				double ValueAxisParam=0;
+				ValueAxisParam = m_pGCSController->getCLAxisParam(this,PI727_CL_PARAM_ADDR::All[param]);
+				setDoubleParam(m_CloseLoopParam.CLParams_arr[param+PIGCS2_CL_PARAM_QTT],ValueAxisParam);
+			}
 		}
+		
     }
     if (m_isHoming)
     {

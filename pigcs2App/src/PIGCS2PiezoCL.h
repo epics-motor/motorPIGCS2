@@ -8,8 +8,8 @@ FILENAME...     PIGCS2PiezoCL.h
 *************************************************************************
  
 
-Augusto Horita
-August 03, 2022
+Augusto Horita and Guilherme Rodrigues de Lima
+Mar 01, 2024
 
 */
 
@@ -28,25 +28,30 @@ August 03, 2022
 
 // ------------- X Axis Closed loop Parameters -------------
 
-#define KP_String           std::string("PI_SUP_KP_")
-#define KI_String		    std::string("PI_SUP_KI_")         // I-term Gain
-#define KFF_String		    std::string("PI_SUP_KFF_")        // Feed Foward Gain
-#define NTCHFR1_String      std::string("PI_SUP_NTCHFR1_")    // Notch frequncy 1
-#define NTCHFR2_String      std::string("PI_SUP_NTCHFR2_")    // Notch frequncy 2
-#define NTCHRJT1_String     std::string("PI_SUP_NTCHRJT1_")   // Notch reject 1
-#define NTCHRJT2_String     std::string("PI_SUP_NTCHRJT2_")   // Notch reject 2
-#define NTCHBDWDT1_String   std::string("PI_SUP_NTCHBDWDT1_") // Notch bandwidth 1
-#define NTCHBDWDT2_String   std::string("PI_SUP_NTCHBDWDT2_") // Notch bandwidth 2
-#define RBKP_String		    std::string("PI_SUP_RBKP_")
-#define RBKI_String		    std::string("PI_SUP_RBKI_")
-#define RBKFF_String		std::string("PI_SUP_RBKFF_")
-#define RBNTCHFR1_String    std::string("PI_SUP_RBNTCHFR1_")
-#define RBNTCHFR2_String    std::string("PI_SUP_RBNTCHFR2_")
-#define RBNTCHRJT1_String   std::string("PI_SUP_RBNTCHRJT1_")
-#define RBNTCHRJT2_String   std::string("PI_SUP_RBNTCHRJT2_")
-#define RBNTCHBDWDT1_String std::string("PI_SUP_RBNTCHBDWDT1_")
-#define RBNTCHBDWDT2_String std::string("PI_SUP_RBNTCHBDWDT2_")
+#define KP_String                   std::string("PI_SUP_KP_")
+#define KI_String		            std::string("PI_SUP_KI_")         // I-term Gain
+#define KFF_String		            std::string("PI_SUP_KFF_")        // Feed Foward Gain
+#define NTCHFR1_String              std::string("PI_SUP_NTCHFR1_")    // Notch frequncy 1
+#define NTCHFR2_String              std::string("PI_SUP_NTCHFR2_")    // Notch frequncy 2
+#define NTCHRJT1_String             std::string("PI_SUP_NTCHRJT1_")   // Notch reject 1
+#define NTCHRJT2_String             std::string("PI_SUP_NTCHRJT2_")   // Notch reject 2
+#define NTCHBDWDT1_String           std::string("PI_SUP_NTCHBDWDT1_") // Notch bandwidth 1
+#define NTCHBDWDT2_String           std::string("PI_SUP_NTCHBDWDT2_") // Notch bandwidth 2
+#define RBKP_String		            std::string("PI_SUP_RBKP_")
+#define RBKI_String		            std::string("PI_SUP_RBKI_")
+#define RBKFF_String		        std::string("PI_SUP_RBKFF_")
+#define RBNTCHFR1_String            std::string("PI_SUP_RBNTCHFR1_")
+#define RBNTCHFR2_String            std::string("PI_SUP_RBNTCHFR2_")
+#define RBNTCHRJT1_String           std::string("PI_SUP_RBNTCHRJT1_")
+#define RBNTCHRJT2_String           std::string("PI_SUP_RBNTCHRJT2_")
+#define RBNTCHBDWDT1_String         std::string("PI_SUP_RBNTCHBDWDT1_")
+#define RBNTCHBDWDT2_String         std::string("PI_SUP_RBNTCHBDWDT2_")
+#define RBONT_String                std::string("PI_SUP_RBONT_")
+#define RBOVF_String                std::string("PI_SUP_RBOVF_")
+#define ANALOGTARGET_String         std::string("PI_SUP_ANALOGTARGET_")
+#define RBANALOGTARGET_String       std::string("PI_SUP_RBANALOGTARGET_")
 
+// ------------- X Axis Closed loop Parameters -------------
 #define PI_SUP_KP_X_String  		  "PI_SUP_KP_X"         // P-term Gain
 #define PI_SUP_KI_X_String		      "PI_SUP_KI_X"         // I-term Gain
 #define PI_SUP_KFF_X_String		      "PI_SUP_KFF_X"        // Feed Foward Gain
@@ -57,8 +62,8 @@ August 03, 2022
 #define PI_SUP_NTCHRJT2_X_String      "PI_SUP_NTCHRJT2_X"   // Notch reject 2
 #define PI_SUP_NTCHBDWDT1_X_String    "PI_SUP_NTCHBDWDT1_X" // Notch bandwidth 1
 #define PI_SUP_NTCHBDWDT2_X_String    "PI_SUP_NTCHBDWDT2_X" // Notch bandwidth 2
+#define PI_SUP_ANALOGTARGET_X_String  "PI_SUP_ANALOGTARGET_X"
 
-// Readback variables
 #define PI_SUP_RBKP_X_String		  "PI_SUP_RBKP_X"
 #define PI_SUP_RBKI_X_String		  "PI_SUP_RBKI_X"
 #define PI_SUP_RBKFF_X_String		  "PI_SUP_RBKFF_X"
@@ -69,6 +74,7 @@ August 03, 2022
 #define PI_SUP_RBNTCHRJT2_X_String    "PI_SUP_RBNTCHRJT2_X"
 #define PI_SUP_RBNTCHBDWDT1_X_String  "PI_SUP_RBNTCHBDWDT1_X"
 #define PI_SUP_RBNTCHBDWDT2_X_String  "PI_SUP_RBNTCHBDWDT2_X"
+#define PI_SUP_RBANALOGTARGET_X_String "PI_SUP_RBANALOGTARGET_X"
 
 // ------------- Y Axis Closed loop Parameters -------------
 #define PI_SUP_KP_Y_String  		  "PI_SUP_KP_Y"
@@ -81,6 +87,7 @@ August 03, 2022
 #define PI_SUP_NTCHRJT2_Y_String      "PI_SUP_NTCHRJT2_Y"
 #define PI_SUP_NTCHBDWDT1_Y_String    "PI_SUP_NTCHBDWDT1_Y"
 #define PI_SUP_NTCHBDWDT2_Y_String    "PI_SUP_NTCHBDWDT2_Y"
+#define PI_SUP_ANALOGTARGET_Y_String  "PI_SUP_ANALOGTARGET_Y"
 
 #define PI_SUP_RBKP_Y_String		  "PI_SUP_RBKP_Y"
 #define PI_SUP_RBKI_Y_String		  "PI_SUP_RBKI_Y"
@@ -92,6 +99,7 @@ August 03, 2022
 #define PI_SUP_RBNTCHRJT2_Y_String    "PI_SUP_RBNTCHRJT2_Y"
 #define PI_SUP_RBNTCHBDWDT1_Y_String  "PI_SUP_RBNTCHBDWDT1_Y"
 #define PI_SUP_RBNTCHBDWDT2_Y_String  "PI_SUP_RBNTCHBDWDT2_Y"
+#define PI_SUP_RBANALOGTARGET_Y_String "PI_SUP_RBANALOGTARGET_Y"
 
 
 // ------------- Z Axis Closed loop Parameters -------------
@@ -105,6 +113,7 @@ August 03, 2022
 #define PI_SUP_NTCHRJT2_Z_String      "PI_SUP_NTCHRJT2_Z"
 #define PI_SUP_NTCHBDWDT1_Z_String    "PI_SUP_NTCHBDWDT1_Z"
 #define PI_SUP_NTCHBDWDT2_Z_String    "PI_SUP_NTCHBDWDT2_Z"
+#define PI_SUP_ANALOGTARGET_Z_String  "PI_SUP_ANALOGTARGET_Z"
 
 #define PI_SUP_RBKP_Z_String		  "PI_SUP_RBKP_Z"
 #define PI_SUP_RBKI_Z_String		  "PI_SUP_RBKI_Z"
@@ -116,7 +125,14 @@ August 03, 2022
 #define PI_SUP_RBNTCHRJT2_Z_String    "PI_SUP_RBNTCHRJT2_Z"
 #define PI_SUP_RBNTCHBDWDT1_Z_String  "PI_SUP_RBNTCHBDWDT1_Z"
 #define PI_SUP_RBNTCHBDWDT2_Z_String  "PI_SUP_RBNTCHBDWDT2_Z"
+#define PI_SUP_RBANALOGTARGET_Z_String "PI_SUP_RBANALOGTARGET_Z"
 
+typedef struct PIGCS2PiezoCLValues{
+
+    int PI_SUP_RBONT;
+    int PI_SUP_RBOVF;
+
+}PIGCS2PiezoCLValues;
 
 typedef struct PIGCS2PiezoCLParams{
     int PI_SUP_KP;
@@ -128,6 +144,7 @@ typedef struct PIGCS2PiezoCLParams{
     int PI_SUP_NTCHRJT2;
     int PI_SUP_NTCHBDWDT1;
     int PI_SUP_NTCHBDWDT2;
+    int PI_SUP_ANALOGTARGET;
     int PI_SUP_RBKP;
     int PI_SUP_RBKI;
     int PI_SUP_RBKFF;
@@ -137,6 +154,7 @@ typedef struct PIGCS2PiezoCLParams{
     int PI_SUP_RBNTCHRJT2;
     int PI_SUP_RBNTCHBDWDT1;
     int PI_SUP_RBNTCHBDWDT2;
+    int PI_SUP_RBANALOGTARGET;
 }PIGCS2PiezoCLParams;
 
 
@@ -160,10 +178,11 @@ namespace PI727_CL_PARAM_ADDR
         NOTCHREJEC2     = 0x07000201UL,
         NOTCHBDWDT1     = 0x08000300UL,
         NOTCHBDWDT2     = 0x08000301UL,
+        ANALOGCHANNEL   = 0x06000500,
     };
 
     static const CL_PARAM All[] = { KP , KI , KFF , NOTCHFREQ1 , NOTCHFREQ2 , \
-                                    NOTCHREJEC1 , NOTCHREJEC2 , NOTCHBDWDT1 , NOTCHBDWDT2 };
+                                    NOTCHREJEC1 , NOTCHREJEC2 , NOTCHBDWDT1 , NOTCHBDWDT2, ANALOGCHANNEL };
 }
 
 

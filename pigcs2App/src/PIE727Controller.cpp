@@ -103,3 +103,47 @@ double PIE727Controller::getCLAxisParam( PIasynAxis* pAxis , unsigned int paramI
 
     return pValue;
 }
+
+//  get axis target status on the controller E727
+
+asynStatus PIE727Controller::getAxisOnt(PIasynAxis* pAxis,int& value)
+{
+	char cmd[100];
+	char buf[255];
+
+	sprintf(cmd, "ONT? %s", pAxis->m_szAxisName);
+
+	asynStatus status = m_pInterface->sendAndReceive(cmd, buf, 99);
+
+	if (status != asynSuccess)
+	{
+		return status;
+	}
+
+	if (!getValue(buf, value))
+	{
+		return asynError;
+	}
+    return status;
+}
+
+asynStatus PIE727Controller::getAxisOvf(PIasynAxis* pAxis,int& value)
+{
+	char cmd[100];
+	char buf[255];
+
+	sprintf(cmd, "OVF? %s", pAxis->m_szAxisName);
+
+	asynStatus status = m_pInterface->sendAndReceive(cmd, buf, 99);
+
+	if (status != asynSuccess)
+	{
+		return status;
+	}
+
+	if (!getValue(buf, value))
+	{
+		return asynError;
+	}
+    return status;
+}

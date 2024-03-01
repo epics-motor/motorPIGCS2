@@ -1,0 +1,13 @@
+record(longin, "$(P)LAST_ERR")
+{
+	field(DTYP, "asynInt32")
+	field(INP, "@asyn($(PORT),0,0)PI_SUP_LAST_ERR")
+	field(SCAN, "I/O Intr")
+}
+
+record(bo, "$(P)CLEAR_ERR")
+{	
+	field(DESC, "Clean message error")
+	field(DTYP, "asynInt32")
+	field(OUT, "@asyn($(PORT),0,0)PI_SUP_CLEAR_ERR")
+}

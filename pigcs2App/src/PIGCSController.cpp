@@ -490,6 +490,27 @@ asynStatus PIGCSController::getAxisPositionCts(PIasynAxis* pAxis)
 
 //void PIGCSController::calcAxisPositionCts();
 
+asynStatus PIGCSController::getServo(PIasynAxis* pAxis,int& servoState)
+{
+	char cmd[100];
+	char buf[255];
+
+	sprintf(cmd, "SVO? %s", pAxis->m_szAxisName);
+
+	asynStatus status = m_pInterface->sendAndReceive(cmd, buf, 99);
+
+	if (status != asynSuccess)
+	{
+		return status;
+	}
+
+	if (!getValue(buf, servoState))
+	{
+		return asynError;
+	}
+    return status;
+}
+
 asynStatus PIGCSController::setServo(PIasynAxis* pAxis, int servoState)
 {
     char cmd[100];

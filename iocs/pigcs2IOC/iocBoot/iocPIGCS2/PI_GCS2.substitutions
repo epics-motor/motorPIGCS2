@@ -7,3 +7,26 @@ pattern
 # U-624.03
 {pigcs2:,  "m2",  "asynMotor",  "C867",    1,  "Motor 2", deg,  Pos,     5,     0,    .2,    0,      1,    .2,  0.0020,  4,     0.0,   0.0,  ""}
 }
+
+#file "$(TOP)/db/PI_Support.db"
+#{
+#pattern
+#{P,          M,     PORT,    ADDR,    TIMEOUT }
+#{pigcs2:,  "m1:",  "C867",     0,         1   }
+#{pigcs2:,  "m2:",  "C867",     1,         1   }
+#}
+
+#file "$(TOP)/db/PI_SupportCL.db"
+#{
+#pattern
+#{P,          M,     PORT,    ADDR,    TIMEOUT }
+#{pigcs2:,  "m1:",  "C867",     0,         1   }
+#{pigcs2:,  "m2:",  "C867",     1,         1   }
+#}
+
+#file "$(TOP)/db/PI_SupportError.db"
+#{
+#pattern
+#{P,           PORT  }
+#{pigcs2:,    "C867" }
+#}
