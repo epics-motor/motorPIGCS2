@@ -66,13 +66,12 @@ asynStatus PIGCSPiezoController::getStatus(PIasynAxis* pAxis, int& homing, int& 
         negLimit = 0;
         posLimit = 0;
         
-        sprintf(cmd, "SVO? %s", pAxis->m_szAxisName);
-        status = m_pInterface->sendAndReceive(cmd, buf, 99);
+        status = getServo(pAxis, servoControl);
         if (status != asynSuccess)
         {
             return status;
         } 
-        getValue(buf, servoControl);
+
     }
 
     return status;

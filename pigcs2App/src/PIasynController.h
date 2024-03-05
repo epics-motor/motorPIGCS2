@@ -20,6 +20,7 @@ December 13, 2009
 
 #include "asynMotorController.h"
 #include "asynMotorAxis.h"
+#include "PIGCS2PiezoCL.h"
 
 class PIasynAxis;
 class PIGCSController;
@@ -38,6 +39,9 @@ public:
     PIasynAxis* getPIAxis(int axisNo) { return (PIasynAxis*)asynMotorController::getAxis(axisNo); }
 
     virtual asynStatus poll();
+
+    u_PIGCS2PiezoCLParams m_CloseLoopParam;
+    PIGCS2PiezoCLValues m_CloseLoopValue;
 
     friend class PIasynAxis;
 
@@ -64,7 +68,6 @@ private:
     int PI_SUP_RBPIVOT_Z;
 
 };
-
 
 #define PI_SUP_POSITION_String		"PI_SUP_POSITION"
 #define PI_SUP_TARGET_String		"PI_SUP_TARGET"

@@ -37,8 +37,8 @@ class PIE727Controller : public PIGCSPiezoController
 		
 // virtual asynStatus getStatus(PIasynAxis* pAxis, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl){return asynSuccess;} 
 
-		virtual asynStatus setCLAxisParam( PIasynAxis* pAxis, unsigned int paramID,  double wantedValue );
-		virtual double getCLAxisParam( PIasynAxis* pAxis, unsigned int paramID);
+		virtual asynStatus setCLAxisParam( PIasynAxis* pAxis, unsigned int paramID, double value );
+		virtual asynStatus getCLAxisParam( PIasynAxis* pAxis, unsigned int paramID, double& value);
 
 		virtual asynStatus getAxisOnt(PIasynAxis* pAxis, int& value);
 		virtual asynStatus getAxisOvf(PIasynAxis* pAxis, int& value);

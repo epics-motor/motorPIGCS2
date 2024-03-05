@@ -86,8 +86,8 @@ public:
     virtual double GetPivotZ() { return 0.0; }
 
     // Closed loop parameters
-    virtual asynStatus setCLAxisParam( PIasynAxis* pAxis, unsigned int paramID,  double wantedValue ){return asynSuccess;} 
-    virtual double getCLAxisParam( PIasynAxis* pAxis, unsigned int paramID){return 0.0;}
+    virtual asynStatus setCLAxisParam( PIasynAxis* pAxis, unsigned int paramID,  double value ){return asynSuccess;} 
+    virtual asynStatus getCLAxisParam( PIasynAxis* pAxis, unsigned int paramID, double& value ){value=0.0; return asynSuccess;}
 
     virtual asynStatus getAxisOnt(PIasynAxis* pAxis, int& value){return asynSuccess;}
     virtual asynStatus getAxisOvf(PIasynAxis* pAxis, int& value){return asynSuccess;}
