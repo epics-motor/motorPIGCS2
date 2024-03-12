@@ -90,16 +90,61 @@ asynStatus PIE727Controller::setCLAxisParam( PIasynAxis* pAxis, unsigned int par
     return status;
 }
 
-double PIE727Controller::getCLAxisParam( PIasynAxis* pAxis , unsigned int paramID)
-{
-    double pValue=0;
+asynStatus PIE727Controller::getCLAxisParam( PIasynAxis* pAxis , unsigned int paramID, double& value)
+{   
+    asynStatus status = asynSuccess;
 
     if (pAxis != NULL)
     {
-        getGCSParameter(pAxis, paramID , pValue);
+        status = getGCSParameter(pAxis, paramID , value);
     }
 
     // printf("getCLAxisParam() axis %d, param: 0x%.8x  = %f\r\n",pAxis->getAxisNo(), paramID, pValue);
 
-    return pValue;
+    return status;
+}
+
+//  get axis On-target status on the controller E727
+
+asynStatus PIE727Controller::getAxisOnt(PIasynAxis* pAxis,int& value)
+{
+	char cmd[100];
+	char buf[255];
+
+	sprintf(cmd, "ONT? %s", pAxis->m_szAxisName);
+
+	asynStatus status = m_pInterface->sendAndReceive(cmd, buf, 99);
+
+	if (status != asynSuccess)
+	{
+		return status;
+	}
+
+	if (!getValue(buf, value))
+	{
+		return asynError;
+	}
+    return status;
+}
+
+//  get axis Over Flow status on the controller E727
+asynStatus PIE727Controller::getAxisOvf(PIasynAxis* pAxis,int& value)
+{
+	char cmd[100];
+	char buf[255];
+
+	sprintf(cmd, "OVF? %s", pAxis->m_szAxisName);
+
+	asynStatus status = m_pInterface->sendAndReceive(cmd, buf, 99);
+
+	if (status != asynSuccess)
+	{
+		return status;
+	}
+
+	if (!getValue(buf, value))
+	{
+		return asynError;
+	}
+    return status;
 }

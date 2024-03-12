@@ -61,10 +61,15 @@ PIasynController::PIasynController(const char *portName, const char* asynPort, i
 	, movesDeferred( 0 )
 	, m_pGCSController( NULL )
 {
+    int axis;
+    PIasynAxis *pAxis;
+    PIasynControllerNode *pNode;
+
     createParam(PI_SUP_POSITION_String,		asynParamFloat64,	&PI_SUP_POSITION);
     createParam(PI_SUP_TARGET_String,		asynParamFloat64,	&PI_SUP_TARGET);
     createParam(PI_SUP_SERVO_String,		asynParamInt32,		&PI_SUP_SERVO);
     createParam(PI_SUP_LAST_ERR_String,		asynParamInt32,		&PI_SUP_LAST_ERR);
+    createParam(PI_SUP_CLEAR_ERR_String,	asynParamInt32,		&PI_SUP_CLEAR_ERR);
     createParam(PI_SUP_PIVOT_X_String,		asynParamFloat64,	&PI_SUP_PIVOT_X);
     createParam(PI_SUP_PIVOT_Y_String,		asynParamFloat64,	&PI_SUP_PIVOT_Y);
     createParam(PI_SUP_PIVOT_Z_String,		asynParamFloat64,	&PI_SUP_PIVOT_Z);
@@ -72,9 +77,28 @@ PIasynController::PIasynController(const char *portName, const char* asynPort, i
     createParam(PI_SUP_RBPIVOT_Y_String,	asynParamFloat64,	&PI_SUP_RBPIVOT_Y);
     createParam(PI_SUP_RBPIVOT_Z_String,	asynParamFloat64,	&PI_SUP_RBPIVOT_Z);
 
-    int axis;
-    PIasynAxis *pAxis;
-    PIasynControllerNode *pNode;
+    createParam(KP_String,  		  		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_KP);
+    createParam(KI_String,		    	    asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_KI);
+    createParam(KFF_String,          		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_KFF);
+    createParam(NTCHFR1_String,      		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHFR1);
+    createParam(NTCHFR2_String,      		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHFR2);
+    createParam(NTCHRJT1_String,     		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHRJT1);
+    createParam(NTCHRJT2_String,     		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHRJT2);
+    createParam(NTCHBDWDT1_String,   		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHBDWDT1);
+    createParam(NTCHBDWDT2_String,   		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHBDWDT2);
+	createParam(ANALOGTARGET_String, 		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_ANALOGTARGET);
+    createParam(RBKP_String,         		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBKP);
+    createParam(RBKI_String,         		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBKI);
+    createParam(RBKFF_String,        		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBKFF);
+    createParam(RBNTCHFR1_String,    		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHFR1);
+    createParam(RBNTCHFR2_String,    		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHFR2);
+    createParam(RBNTCHRJT1_String,   		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHRJT1);
+    createParam(RBNTCHRJT2_String,   		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHRJT2);
+    createParam(RBNTCHBDWDT1_String, 		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHBDWDT1);
+    createParam(RBNTCHBDWDT2_String, 		asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHBDWDT2);
+	createParam(RBANALOGTARGET_String,	    asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBANALOGTARGET);
+	createParam(RBONT_String,        		asynParamInt32,    &m_CloseLoopValue.PI_SUP_RBONT);
+	createParam(RBOVF_String,        		asynParamInt32,    &m_CloseLoopValue.PI_SUP_RBOVF);
 
     if (!PIasynControllerListInitialized)
     {
@@ -155,8 +179,6 @@ PIasynController::PIasynController(const char *portName, const char* asynPort, i
     {
         pAxis  = new PIasynAxis(this, m_pGCSController, axis, m_pGCSController->getAxesID(axis));
         pAxis->Init(portName);
-
-        pAxis->createCLParams(m_pGCSController->getAxesID(axis));
     }
 
     startPoller(double(movingPollPeriod)/1000, double(idlePollPeriod)/1000, 10);
@@ -261,7 +283,7 @@ asynStatus PIasynController::writeInt32(asynUser *pasynUser, epicsInt32 value)
      * status at the end, but that's OK */
     status = pAxis->setIntegerParam(function, value);
     
-    if (function == motorClosedLoop_)
+    if (function == motorClosedLoop_ || function == PI_SUP_SERVO)
     {
         asynPrint(pasynUser, ASYN_TRACE_FLOW,
         		"%s:%s: %sing Closed-Loop Control flag on driver %s\n",
@@ -281,7 +303,13 @@ asynStatus PIasynController::writeInt32(asynUser *pasynUser, epicsInt32 value)
             processDeferredMoves();
         }
         this->movesDeferred = value;
-    } else {
+    }
+    else if (function == PI_SUP_CLEAR_ERR)
+    {   
+		m_pGCSController->m_LastError = 0;
+        setIntegerParam(0, PI_SUP_LAST_ERR, m_pGCSController->GetLastError() );
+    }
+    else {
         /* Call base class call its method (if we have our parameters check this here) */
         status = asynMotorController::writeInt32(pasynUser, value);
     }
@@ -323,7 +351,7 @@ asynStatus PIasynController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
 
     for(cl_iter = 0; cl_iter < PIGCS2_CL_PARAM_QTT; cl_iter++)
     {
-        if ( (function == pAxis->m_CloseLoopParam.CLParams_arr[cl_iter]) )
+        if ( (function == m_CloseLoopParam.CLParams_arr[cl_iter]) )
         {
             status = m_pGCSController->setCLAxisParam( pAxis, PI727_CL_PARAM_ADDR::All[cl_iter],  value );
             break;
@@ -332,8 +360,9 @@ asynStatus PIasynController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
     if (cl_iter >= PIGCS2_CL_PARAM_QTT)
     {
         if (function == PI_SUP_TARGET)
-        {
-            printf("PI_SUP_TargetAO: %f for axis %d\n", value, pAxis->axisNo_);
+        {   
+            status = m_pGCSController->move(pAxis, value);
+            //printf("PI_SUP_TargetAO: %f for axis %d\n", value, pAxis->axisNo_);
         }
         else if (function == PI_SUP_PIVOT_X)
         {
@@ -499,25 +528,28 @@ asynStatus PIasynController::configAxis(PIasynAxis *pAxis)
 
 asynStatus PIasynController::poll()
 {
-    PIasynAxis *pAxis;
-
     m_pGCSController->getGlobalState(pAxes_, numAxes_);
 
-    setDoubleParam( 0, PI_SUP_RBPIVOT_X, m_pGCSController->GetPivotX());
-    setDoubleParam( 0, PI_SUP_RBPIVOT_Y, m_pGCSController->GetPivotY());
-    setDoubleParam( 0, PI_SUP_RBPIVOT_Z, m_pGCSController->GetPivotZ());
+    setDoubleParam(0, PI_SUP_RBPIVOT_X, m_pGCSController->GetPivotX());
+    setDoubleParam(0, PI_SUP_RBPIVOT_Y, m_pGCSController->GetPivotY());
+    setDoubleParam(0, PI_SUP_RBPIVOT_Z, m_pGCSController->GetPivotZ());
 
+    /*
+    PIasynAxis *pAxis;
     for (int axis=0; axis < this->numAxes_; axis++)
     {
         pAxis = getPIAxis(axis);
 
         for(unsigned int param=0 ; param<PIGCS2_CL_PARAM_QTT ; param++)
         {
-            setDoubleParam( 0, pAxis->m_CloseLoopParam.CLParams_arr[param+PIGCS2_CL_PARAM_QTT], m_pGCSController->getCLAxisParam(pAxis,PI727_CL_PARAM_ADDR::All[param]));
+            double ValueAxisParam=0;
+            m_pGCSController->getCLAxisParam(pAxis,PI727_CL_PARAM_ADDR::All[param], ValueAxisParam)
+            pAxis->setDoubleParam(m_CloseLoopParam.CLParams_arr[param+PIGCS2_CL_PARAM_QTT], ValueAxisParam);
         }
     }
+    */
 
-    setIntegerParam( 0, PI_SUP_LAST_ERR, m_pGCSController->GetLastError() );
+    setIntegerParam(0, PI_SUP_LAST_ERR, m_pGCSController->GetLastError() );
 
     callParamCallbacks();
     return asynSuccess;

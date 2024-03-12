@@ -112,32 +112,6 @@ PIasynAxis::~PIasynAxis()
 	}
 }
 
-void PIasynAxis::createCLParams(const char* axisName)
-{
-    pController_->createParam( (KP_String + axisName).c_str() ,  		  asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_KP);
-
-
-    // printf("------------------- createCLParams() axis %s %s ------------------- \r\n",KP_String,axisName );
-	
-    pController_->createParam( (KI_String + axisName).c_str(),		     asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_KI);
-    pController_->createParam( (KFF_String + axisName).c_str(),          asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_KFF);
-    pController_->createParam( (NTCHFR1_String + axisName).c_str(),      asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHFR1);
-    pController_->createParam( (NTCHFR2_String + axisName).c_str(),      asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHFR2);
-    pController_->createParam( (NTCHRJT1_String + axisName).c_str(),     asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHRJT1);
-    pController_->createParam( (NTCHRJT2_String + axisName).c_str(),     asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHRJT2);
-    pController_->createParam( (NTCHBDWDT1_String + axisName).c_str(),   asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHBDWDT1);
-    pController_->createParam( (NTCHBDWDT2_String + axisName).c_str(),   asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_NTCHBDWDT2);
-    pController_->createParam( (RBKP_String + axisName).c_str(),         asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBKP);
-    pController_->createParam( (RBKI_String + axisName).c_str(),         asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBKI);
-    pController_->createParam( (RBKFF_String + axisName).c_str(),        asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBKFF);
-    pController_->createParam( (RBNTCHFR1_String + axisName).c_str(),    asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHFR1);
-    pController_->createParam( (RBNTCHFR2_String + axisName).c_str(),    asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHFR2);
-    pController_->createParam( (RBNTCHRJT1_String + axisName).c_str(),   asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHRJT1);
-    pController_->createParam( (RBNTCHRJT2_String + axisName).c_str(),   asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHRJT2);
-    pController_->createParam( (RBNTCHBDWDT1_String + axisName).c_str(), asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHBDWDT1);
-    pController_->createParam( (RBNTCHBDWDT2_String + axisName).c_str(), asynParamFloat64,  &m_CloseLoopParam.CLParams_str.PI_SUP_RBNTCHBDWDT2);    
-}
-
 asynStatus PIasynAxis::poll(bool *returnMoving)
 {
     int done = 0;
@@ -189,25 +163,41 @@ asynStatus PIasynAxis::poll(bool *returnMoving)
 			double realPosition;
 			m_pGCSController->getAxisPosition(this, realPosition);
 			setDoubleParam(pController_->PI_SUP_POSITION,      realPosition );
+
+			int axisont;
+			m_pGCSController->getAxisOnt(this, axisont);
+			setIntegerParam(pController_->m_CloseLoopValue.PI_SUP_RBONT,axisont);
+
+			int axisovf = 0;
+			m_pGCSController->getAxisOvf(this, axisovf);
+			setIntegerParam(pController_->m_CloseLoopValue.PI_SUP_RBOVF,axisovf);
+
+			for(unsigned int param=0 ; param<PIGCS2_CL_PARAM_QTT ; param++)
+			{
+				double ValueAxisParam=0;
+				m_pGCSController->getCLAxisParam(this,PI727_CL_PARAM_ADDR::All[param], ValueAxisParam);
+				setDoubleParam(pController_->m_CloseLoopParam.CLParams_arr[param+PIGCS2_CL_PARAM_QTT],ValueAxisParam);
+			}
 		}
+		
     }
     if (m_isHoming)
     {
 	    asynPrint(pasynUser_, ASYN_TRACE_FLOW,
 	        "PIasynAxis::poll() axis %d referencing ...\n", axisNo_ );
     }
-    setDoubleParam(pController_->motorPosition_,          m_positionCts );
-    setDoubleParam(pController_->motorEncoderPosition_,   m_positionCts);
-    setIntegerParam(pController_->motorStatusDirection_,   m_lastDirection);
-    setIntegerParam(pController_->motorStatusDone_,        done );
-    setIntegerParam(pController_->motorStatusHighLimit_,   posLimit);
-    setIntegerParam(pController_->motorStatusHomed_,       m_homed );
-    setIntegerParam(pController_->motorStatusMoving_,      !done );
-    setIntegerParam(pController_->motorStatusLowLimit_,    negLimit);
+    setDoubleParam(pController_->motorPosition_,          	m_positionCts );
+    setDoubleParam(pController_->motorEncoderPosition_,   	m_positionCts);
+    setIntegerParam(pController_->motorStatusDirection_,   	m_lastDirection);
+    setIntegerParam(pController_->motorStatusDone_,        	done );
+    setIntegerParam(pController_->motorStatusHighLimit_,   	posLimit);
+    setIntegerParam(pController_->motorStatusHomed_,       	m_homed );
+    setIntegerParam(pController_->motorStatusMoving_,      	!done );
+    setIntegerParam(pController_->motorStatusLowLimit_,    	negLimit);
     setIntegerParam(pController_->motorStatusGainSupport_,	true);
     setIntegerParam(pController_->motorStatusProblem_,		m_bProblem);
     setIntegerParam(pController_->motorStatusPowerOn_,		m_bServoControl);
-    setIntegerParam(pController_->PI_SUP_SERVO,	      	m_bServoControl );
+    setIntegerParam(pController_->PI_SUP_SERVO,	      		m_bServoControl );
 
     callParamCallbacks();
 

@@ -13,6 +13,7 @@ include $(TOP)/configure/CONFIG
 #DB += xxx.db
 
 DB += PI_SupportCtrl.db
+DB += PI_SupportError.db
 DB += PI_Support.db
 DB += PI_SupportCL.db
 

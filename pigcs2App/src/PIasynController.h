@@ -20,6 +20,7 @@ December 13, 2009
 
 #include "asynMotorController.h"
 #include "asynMotorAxis.h"
+#include "PIGCS2PiezoCL.h"
 
 class PIasynAxis;
 class PIGCSController;
@@ -39,6 +40,9 @@ public:
 
     virtual asynStatus poll();
 
+    u_PIGCS2PiezoCLParams m_CloseLoopParam;
+    PIGCS2PiezoCLValues m_CloseLoopValue;
+
     friend class PIasynAxis;
 
 private:
@@ -55,6 +59,7 @@ private:
     int PI_SUP_TARGET;
     int PI_SUP_SERVO;
     int PI_SUP_LAST_ERR;
+    int PI_SUP_CLEAR_ERR;
     int PI_SUP_PIVOT_X;
     int PI_SUP_PIVOT_Y;
     int PI_SUP_PIVOT_Z;
@@ -64,11 +69,11 @@ private:
 
 };
 
-
 #define PI_SUP_POSITION_String		"PI_SUP_POSITION"
 #define PI_SUP_TARGET_String		"PI_SUP_TARGET"
 #define PI_SUP_SERVO_String			"PI_SUP_SERVO"
 #define PI_SUP_LAST_ERR_String		"PI_SUP_LAST_ERR"
+#define PI_SUP_CLEAR_ERR_String		"PI_SUP_CLEAR_ERR"
 #define PI_SUP_PIVOT_X_String		"PI_SUP_PIVOT_X"
 #define PI_SUP_PIVOT_Y_String		"PI_SUP_PIVOT_Y"
 #define PI_SUP_PIVOT_Z_String		"PI_SUP_PIVOT_Z"

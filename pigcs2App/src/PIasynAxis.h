@@ -18,7 +18,7 @@ Based on drvMotorSim.c, Mark Rivers, December 13, 2009
 
 #include <asynDriver.h> // for asynStatus
 #include <asynMotorAxis.h>
-#include "PIGCS2PiezoCL.h"
+//#include "PIGCS2PiezoCL.h"
 
 class PIasynController;
 class PIGCSController;
@@ -40,9 +40,6 @@ public:
     virtual asynStatus home(double minVelocity, double maxVelocity, double acceleration, int forwards);
     virtual asynStatus stop(double acceleration);
     virtual asynStatus setPosition(double position);
-
-
-    void createCLParams(const char* axisName);
 
     char* m_szAxisName;			///< GCS name
 
@@ -72,7 +69,6 @@ public:
     bool m_bEnableAxisAfterHoming;
     bool m_bSetServoAfterHoming;
     int m_movingStateMask;
-    u_PIGCS2PiezoCLParams m_CloseLoopParam;
 
     friend class PIasynController;
 private:
