@@ -32,3 +32,18 @@ record(bi, "$(P)$(M)RBSERVO")
    field(SCAN, "I/O Intr")
 }
 
+record(ai, "$(P)$(M)HLM")
+{
+	field(DTYP, "asynFloat64")
+	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_HIGH_LIMIT")
+	field(PREC, "5")
+	field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(M)LLM")
+{
+	field(DTYP, "asynFloat64")
+	field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_LOW_LIMIT")
+	field(PREC, "5")
+	field(SCAN, "I/O Intr")
+}

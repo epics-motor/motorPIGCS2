@@ -18,7 +18,6 @@ Based on drvMotorSim.c, Mark Rivers, December 13, 2009
 
 #include <asynDriver.h> // for asynStatus
 #include <asynMotorAxis.h>
-//#include "PIGCS2PiezoCL.h"
 
 class PIasynController;
 class PIGCSController;
