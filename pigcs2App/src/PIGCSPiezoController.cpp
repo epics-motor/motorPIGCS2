@@ -147,7 +147,7 @@ asynStatus PIGCSPiezoController::haltAxis(PIasynAxis* pAxis)
 	// controller will set error code to PI_CNTR_STOP (10)
     if (err != PI_CNTR_STOP)
     {
-        asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+        asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
         		"PIGCSPiezoController::haltAxis() failed, GCS error %d", err);
         return asynError;
     }

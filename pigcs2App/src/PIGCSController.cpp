@@ -169,7 +169,7 @@ asynStatus PIGCSController::moveCts( PIasynAxis** pAxesArray, int* pTargetCtsArr
     if (errorCode == 0)
     	return asynSuccess;
 
-    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
     		"PIGCSController::moveCts(array) failed, GCS error %d\n", errorCode);
     return asynError;
 }
@@ -178,7 +178,7 @@ asynStatus PIGCSController::setAxisPositionCts(PIasynAxis* pAxis, double positio
 {
 	double position = double(positionCts) * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
 
-	asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+	asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW,
 		"PIGCSController::setAxisPositionCts(, %f) \n", positionCts);
 	return setAxisPosition(pAxis, position);
 }
@@ -193,7 +193,7 @@ asynStatus PIGCSController::setAxisPosition(PIasynAxis* pAxis, double position)
     {
     	return status;
     }
-    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW,
     		"PIGCSController::setAxisPosition() sent \"%s\"\n", cmd);
     sprintf(cmd,"POS %s %f", pAxis->m_szAxisName, position);
     status = m_pInterface->sendOnly(cmd);
@@ -201,7 +201,7 @@ asynStatus PIGCSController::setAxisPosition(PIasynAxis* pAxis, double position)
     {
     	return status;
     }
-    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW,
     		"PIGCSController::setAxisPosition() sent \"%s\"\n", cmd);
     sprintf(cmd,"RON %s 1", pAxis->m_szAxisName);
     status = m_pInterface->sendOnly(cmd);
@@ -209,14 +209,14 @@ asynStatus PIGCSController::setAxisPosition(PIasynAxis* pAxis, double position)
     {
     	return status;
     }
-    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW,
     		"PIGCSController::setAxisPosition() sent \"%s\"\n", cmd);
 
     int errorCode = getGCSError();
     if (errorCode == 0)
     	return asynSuccess;
 
-    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
     		"PIGCSController::setAxisPosition() failed, GCS error %d\n", errorCode);
     return asynError;
 
@@ -226,7 +226,7 @@ asynStatus PIGCSController::setAxisPosition(PIasynAxis* pAxis, double position)
 asynStatus PIGCSController::moveCts( PIasynAxis* pAxis, int targetCts )
 {
 	double target = double(targetCts) * pAxis->m_CPUdenominator / pAxis->m_CPUnumerator;
-    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW,
     		"PIGCSController::moveCts(, %d) \n", targetCts);
 	return move(pAxis, target);
 }
@@ -241,14 +241,14 @@ asynStatus PIGCSController::move( PIasynAxis* pAxis, double target )
     {
     	return status;
     }
-    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW,
     		"PIGCSController::move() sent \"%s\"\n", cmd);
     pAxis->m_lastDirection = (target > pAxis->m_position) ? 1 : 0;
     int errorCode = getGCSError();
     if (errorCode == 0)
     	return asynSuccess;
 
-    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
     		"PIGCSController::move() failed, GCS error %d\n", errorCode);
     return asynError;
 }
@@ -272,14 +272,14 @@ int PIGCSController::getGCSError()
 		m_LastError = errorCode;
         if (m_pInterface->m_pCurrentLogSink)
         {
-            asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+            asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
                    "PIGCSController::getGCSError() GCS error code = %d\n",
                       errorCode);
         
 		    char szErrorMsg[1024];
 		    if (TranslatePIError(errorCode, szErrorMsg, 1024))
 		    {
-	            asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+	            asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
 	                      "PIGCSController::getGCSError() GCS error, %s\n",
 	                      szErrorMsg);
 
@@ -302,7 +302,7 @@ asynStatus PIGCSController::haltAxis(PIasynAxis* pAxis)
 	// controller will set error code to PI_CNTR_STOP (10)
     if (err != PI_CNTR_STOP)
     {
-        asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+        asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
         		"PIGCSController::haltAxis() failed, GCS error %d", err);
         return asynError;
     }
@@ -530,7 +530,7 @@ asynStatus PIGCSController::setServo(PIasynAxis* pAxis, int servoState)
     	}
     	return asynSuccess;
     }
-    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
               "Could not set servo state!\n");
 	return asynError;
 
@@ -550,7 +550,7 @@ asynStatus PIGCSController::setEnableAxis(PIasynAxis* pAxis, int axisEnableState
     if (errorCode == 0)
     	return asynSuccess;
 
-    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
     		"PIGCSController::setEnableAxis() failed, GCS error %d\n", errorCode);
 
     return asynError;
@@ -578,7 +578,7 @@ asynStatus PIGCSController::getEnableAxis(PIasynAxis* pAxis, int& axisEnableStat
     	return asynSuccess;
 	}
 
-    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+    asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
     		"PIGCSController::setEnableAxis() failed, GCS error %d\n", errorCode);
 
     return asynError;

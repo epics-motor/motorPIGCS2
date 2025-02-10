@@ -118,21 +118,21 @@ PIasynController::PIasynController(const char *portName, const char* asynPort, i
     status = pasynOctetSyncIO->connect(asynPort, 0, &pAsynCom, NULL);
     if (status)
     {
-    	asynPrint(pAsynCom, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+	asynPrint(pAsynCom, ASYN_TRACE_ERROR,
           "echoHandler: unable to connect to port %s\n",
           asynPort);
     	return;
 	}
 	status = pasynOctetSyncIO->setInputEos(pAsynCom, "\n", 1);
 	if (status) {
-		asynPrint(pAsynCom, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+		asynPrint(pAsynCom, ASYN_TRACE_ERROR,
 			  "echoHandler: unable to set input EOS on %s: %s\n",
 			  asynPort, pAsynCom->errorMessage);
 		return;
 	}
 	status = pasynOctetSyncIO->setOutputEos(pAsynCom, "", 0);
 	if (status) {
-		asynPrint(pAsynCom, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+		asynPrint(pAsynCom, ASYN_TRACE_ERROR,
 			  "echoHandler: unable to set output EOS on %s: %s\n",
 			  asynPort, pAsynCom->errorMessage);
 		return;
@@ -142,7 +142,8 @@ PIasynController::PIasynController(const char *portName, const char* asynPort, i
 	char inputBuff[256];
 	inputBuff[0] = '\0';
 	status = pInterface->sendAndReceive("*IDN?", inputBuff, 255, pAsynCom);
-	asynPrint(pAsynCom, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+	// It is helpful to see IDN strings when an IOC starts, so use ASYN_TRACE_ERROR instead of ASYN_TRACE_FLOW
+	asynPrint(pAsynCom, ASYN_TRACE_ERROR,
 			  "read from %s: %s\n",
 			  asynPort, inputBuff);
 
@@ -153,7 +154,7 @@ PIasynController::PIasynController(const char *portName, const char* asynPort, i
 	m_pGCSController = PIGCSController::CreateGCSController(pInterface, inputBuff);
 	if (NULL == m_pGCSController)
 	{
-		asynPrint(pAsynCom, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+		asynPrint(pAsynCom, ASYN_TRACE_ERROR,
 			  "PIasynController: unknown controller type %s: %s\n",
 			  asynPort, inputBuff);
 		return;
@@ -167,7 +168,7 @@ PIasynController::PIasynController(const char *portName, const char* asynPort, i
 	if (m_pGCSController->getNrFoundAxes()<size_t(numAxes))
 	{
 		// more axes configured than connected to controller
-		asynPrint(pAsynCom, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+		asynPrint(pAsynCom, ASYN_TRACE_ERROR,
 			  "PIasynController: requested number of axes (%d) out of range, only %d axis/axes supported\n",
 			  numAxes, int(m_pGCSController->getNrFoundAxes()));
 		delete m_pGCSController;
@@ -267,7 +268,7 @@ asynStatus PIasynController::writeInt32(asynUser *pasynUser, epicsInt32 value)
 {
 	if (NULL == m_pGCSController)
 	{
-		asynPrint(pasynUser, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+		asynPrint(pasynUser, ASYN_TRACE_ERROR,
           "PIasynController::writeInt32() GCS controller not initialized!\n");
 
 		return asynError;
@@ -317,7 +318,7 @@ asynStatus PIasynController::writeInt32(asynUser *pasynUser, epicsInt32 value)
     /* Do callbacks so higher layers see any changes */
     pAxis->callParamCallbacks();
     if (status) 
-        asynPrint(pasynUser, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+        asynPrint(pasynUser, ASYN_TRACE_ERROR,
               "%s:%s: error, status=%d function=%d, value=%d\n", 
               driverName, functionName, status, function, value);
     else        
@@ -331,7 +332,7 @@ asynStatus PIasynController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
 {
 	if (NULL == m_pGCSController)
 	{
-		asynPrint(pasynUser, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+		asynPrint(pasynUser, ASYN_TRACE_ERROR,
           "PIasynController::writeFloat64() GCS controller not initialized!\n");
 
 		return asynError;
@@ -403,7 +404,7 @@ asynStatus PIasynController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
     /* Do callbacks so higher layers see any changes */
     pAxis->callParamCallbacks();
     if (status) 
-        asynPrint(pasynUser, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+        asynPrint(pasynUser, ASYN_TRACE_ERROR,
               "%s:%s: error, status=%d function=%d, value=%f\n", 
               driverName, functionName, status, function, value);
     else        
@@ -416,14 +417,14 @@ asynStatus PIasynController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
 
 asynStatus PIasynController::profileMove(asynUser *pasynUser, int npoints, double positions[], double times[], int relative, int trigger )
 {
-	asynPrint(pasynUser, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+	asynPrint(pasynUser, ASYN_TRACE_ERROR,
 			"PIasynController::profileMove() - not implemented\n");
 	return asynError;
 }
 
 asynStatus PIasynController::triggerProfile(asynUser *pasynUser)
 {
-	asynPrint(pasynUser, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+	asynPrint(pasynUser, ASYN_TRACE_ERROR,
 			"PIasynController::profileMove() - not implemented\n");
 	return asynError;
 }
@@ -434,7 +435,7 @@ asynStatus PIasynController::configAxis(PIasynAxis *pAxis)
 	asynStatus status = pasynManager->connectDevice(logSink, portName, pAxis->getAxisNo());
 	if (status != asynSuccess)
 	{
-		asynPrint(logSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+		asynPrint(logSink, ASYN_TRACE_ERROR,
 				"PIasynController::configAxis() - connectDevice() failed\n");
 		return status;
 	}

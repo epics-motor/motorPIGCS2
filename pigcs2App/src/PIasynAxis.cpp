@@ -78,7 +78,7 @@ void PIasynAxis::Init(const char *portName)
 	asynStatus status = pasynManager->connectDevice(logSink, portName, getAxisNo());
 	if (status != asynSuccess)
 	{
-		asynPrint(logSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+		asynPrint(logSink, ASYN_TRACE_ERROR,
 				"PIasynController::configAxis() - connectDevice() failed\n");
 		return;
 	}
@@ -128,7 +128,7 @@ asynStatus PIasynAxis::poll(bool *returnMoving)
 		if (oldHoming && oldHoming != m_isHoming)
 		{
 			m_pGCSController->getReferencedState(this);
-		    asynPrint(pasynUser_, ASYN_TRACE_ERROR, //FIXME: ASYN_TRACE_FLOW,
+		    asynPrint(pasynUser_, ASYN_TRACE_FLOW,
 		        "PIasynAxis::poll() axis %d referencing state changed, homed = %d\n",
 		        axisNo_, m_homed );
 			
@@ -213,10 +213,8 @@ asynStatus PIasynAxis::move(double position, int relative, double minVelocity, d
 
 	if (!m_pGCSController->AcceptsNewTarget())
 	{
-	    asynPrint(pasynUser_, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+	    asynPrint(pasynUser_, ASYN_TRACE_ERROR,
 	        "%s:%s: Set port %s, axis %d - controller does not accept new target (busy?)\n",
-	        driverName, functionName, pC_->portName, axisNo_ );
-	    printf("%s:%s: Set port %s, axis %d - controller does not accept new target (busy?)\n",
 	        driverName, functionName, pC_->portName, axisNo_ );
 		return status;
 	}
@@ -276,7 +274,7 @@ asynStatus PIasynAxis::moveVelocity(double minVelocity, double maxVelocity, doub
 
 	if (!m_pGCSController->AcceptsNewTarget())
 	{
-	    asynPrint(pasynUser_, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+	    asynPrint(pasynUser_, ASYN_TRACE_ERROR,
 	        "%s:%s: Set port %s, axis %d - controller does not accept new target (busy?)",
 	        driverName, functionName, pController_->portName, axisNo_ );
 		return status;
