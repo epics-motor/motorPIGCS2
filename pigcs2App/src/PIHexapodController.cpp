@@ -174,7 +174,7 @@ asynStatus PIHexapodController::moveCts( PIasynAxis* pAxis, int targetCts )
 //    	printf("PIHexapodController::moveCts(,%d) - not moving after MOV() gcserror=%d\n",targetCts, errorCode);
         if (errorCode != 0)
         {
-        	asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+		asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
         		"PIHexapodController::moveCts() failed, GCS error %d\n", errorCode);
         	return asynError;
         }
@@ -214,7 +214,7 @@ asynStatus PIHexapodController::moveCts( PIasynAxis** pAxesArray, int* pTargetCt
         int errorCode = getGCSError();
         if (errorCode != 0)
         {
-        	asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+		asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
         		"PIHexapodController::moveCts() failed, GCS error %d\n", errorCode);
         	return asynError;
         }
@@ -352,7 +352,7 @@ asynStatus PIHexapodController::SetPivot(char cAxis, double value)
     int errorCode = getGCSError();
     if (errorCode != 0)
     {
-    	asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+	asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
     		"PIHexapodController::SetPivot() failed, GCS error %d\n", errorCode);
     	return asynError;
     }
@@ -443,7 +443,7 @@ asynStatus PIHexapodController::haltAxis(PIasynAxis* pAxis)
 	// controller will set error code to PI_CNTR_STOP (10)
     if (err != PI_CNTR_STOP)
     {
-        asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_FLOW|ASYN_TRACE_ERROR,
+        asynPrint(m_pInterface->m_pCurrentLogSink, ASYN_TRACE_ERROR,
         		"PIGCSController::haltAxis() failed, GCS error %d", err);
         return asynError;
     }
