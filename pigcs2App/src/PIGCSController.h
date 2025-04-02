@@ -17,8 +17,8 @@ Created: 15.12.2010
 
 #include <asynDriver.h>
 #include <string.h>
+#include <string>
 #include "picontrollererrors.h"
-
 
 class PIasynAxis;
 class asynMotorAxis;
@@ -85,6 +85,14 @@ public:
     virtual double GetPivotY() { return 0.0; }
     virtual double GetPivotZ() { return 0.0; }
 
+    // Coordinate System
+    virtual asynStatus setActivate(const char* value){return asynSuccess;}
+    virtual asynStatus getActivate(std::string &value){return asynSuccess;}
+    virtual asynStatus setLink(const char* value){return asynSuccess;}
+    virtual asynStatus getLink(std::string &value){return asynSuccess;}
+    virtual asynStatus setToolOffset(const char* value){return asynSuccess;}
+    virtual asynStatus setWorkOffset(const char* value){return asynSuccess;}
+
     // Closed loop parameters
     virtual asynStatus setCLAxisParam( PIasynAxis* pAxis, unsigned int paramID,  double value ){return asynSuccess;} 
     virtual asynStatus getCLAxisParam( PIasynAxis* pAxis, unsigned int paramID, double& value ){value=0.0; return asynSuccess;}
@@ -109,6 +117,7 @@ public:
     static const size_t MAX_NR_AXES = 64;
 	bool m_bAnyAxisMoving;
     int m_LastError;
+    int m_targetMode = 0;
 
     static void getStatusFromBitMask(long mask, int& homing, int& moving, int& negLimit, int& posLimit, int& servoControl);
 

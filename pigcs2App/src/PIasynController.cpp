@@ -100,6 +100,13 @@ PIasynController::PIasynController(const char *portName, const char* asynPort, i
 	createParam(RBONT_String,        		asynParamInt32,    &m_CloseLoopValue.PI_SUP_RBONT);
 	createParam(RBOVF_String,        		asynParamInt32,    &m_CloseLoopValue.PI_SUP_RBOVF);
 
+    // Coordinate System
+    createParam(PI_CS_TARGETMODE_String,    asynParamInt32,    &PI_CS_TARGETMODE);
+    createParam(PI_CS_ACTIVATE_String,      asynParamOctet,    &PI_CS_ACTIVATE);
+    createParam(PI_CS_LINK_String,          asynParamOctet,    &PI_CS_LINK);
+    createParam(PI_CS_KST_String,           asynParamOctet,    &PI_CS_KST);
+    createParam(PI_CS_KSW_String,           asynParamOctet,    &PI_CS_KSW);
+
     if (!PIasynControllerListInitialized)
     {
         PIasynControllerListInitialized = 1;
@@ -310,6 +317,11 @@ asynStatus PIasynController::writeInt32(asynUser *pasynUser, epicsInt32 value)
 		m_pGCSController->m_LastError = 0;
         setIntegerParam(0, PI_SUP_LAST_ERR, m_pGCSController->GetLastError() );
     }
+    else if (function == PI_CS_TARGETMODE)
+    {   
+		m_pGCSController->m_targetMode = value;
+        setIntegerParam(0, PI_CS_TARGETMODE, value);
+    }
     else {
         /* Call base class call its method (if we have our parameters check this here) */
         status = asynMotorController::writeInt32(pasynUser, value);
@@ -362,7 +374,8 @@ asynStatus PIasynController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
     {
         if (function == PI_SUP_TARGET)
         {   
-            status = m_pGCSController->move(pAxis, value);
+            double target = value * pAxis->m_CPUnumerator / pAxis->m_CPUdenominator ;
+            status = m_pGCSController->moveCts(pAxis, target);
             //printf("PI_SUP_TargetAO: %f for axis %d\n", value, pAxis->axisNo_);
         }
         else if (function == PI_SUP_PIVOT_X)
@@ -414,6 +427,42 @@ asynStatus PIasynController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
     return status;
 }
 
+asynStatus PIasynController::writeOctet (asynUser *pasynUser, const char *value, size_t maxChars, size_t *nActual)
+{
+    int function = pasynUser->reason;
+    asynStatus status = asynSuccess;
+    static const char *functionName = "writeOctet";
+    *nActual = strlen(value);
+    
+    if (function == PI_CS_ACTIVATE)
+    {
+        m_pGCSController->setActivate(value);
+    }
+    else if (function == PI_CS_LINK)
+    {
+        m_pGCSController->setLink(value);
+    }
+    else if (function == PI_CS_KST)
+    {
+        m_pGCSController->setToolOffset(value);
+    }
+    else if (function == PI_CS_KSW)
+    {
+        m_pGCSController->setWorkOffset(value);
+    }
+
+    callParamCallbacks();
+
+    if (status) 
+            asynPrint(pasynUser, ASYN_TRACE_ERROR|ASYN_TRACE_FLOW,
+                "%s:%s: error, status=%d function=%d, value=%s\n", 
+                driverName, functionName, status, function, value);
+        else        
+            asynPrint(pasynUser, ASYN_TRACEIO_DRIVER, 
+                "%s:%s: function=%d, value=%s\n", 
+                driverName, functionName, function, value);
+    return status;
+}
 
 asynStatus PIasynController::profileMove(asynUser *pasynUser, int npoints, double positions[], double times[], int relative, int trigger )
 {
@@ -457,7 +506,7 @@ asynStatus PIasynController::configAxis(PIasynAxis *pAxis)
     pAxis->setDoubleParam(this->motorHighLimit_, posLimit);
     m_pGCSController->getReferencedState(pAxis);
 	pAxis->setIntegerParam( this->motorStatusHomed_,        pAxis->m_homed );
-
+    
     pasynManager->freeAsynUser(logSink);
 
     /* Send a signal to the poller task which will make it do a poll,
@@ -530,11 +579,21 @@ asynStatus PIasynController::configAxis(PIasynAxis *pAxis)
 asynStatus PIasynController::poll()
 {
     m_pGCSController->getGlobalState(pAxes_, numAxes_);
-
+    
     setDoubleParam(0, PI_SUP_RBPIVOT_X, m_pGCSController->GetPivotX());
     setDoubleParam(0, PI_SUP_RBPIVOT_Y, m_pGCSController->GetPivotY());
     setDoubleParam(0, PI_SUP_RBPIVOT_Z, m_pGCSController->GetPivotZ());
 
+    setIntegerParam(0, PI_CS_TARGETMODE, m_pGCSController->m_targetMode);
+
+    std::string value = "";
+
+    m_pGCSController->getActivate(value);
+    setStringParam(0, PI_CS_ACTIVATE, value);
+
+    m_pGCSController->getLink(value);
+    setStringParam(0, PI_CS_LINK, value);
+    
     /*
     PIasynAxis *pAxis;
     for (int axis=0; axis < this->numAxes_; axis++)

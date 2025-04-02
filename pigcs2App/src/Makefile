@@ -30,6 +30,7 @@ PI_GCS2Support_SRCS += PIC885Controller.cpp
 PI_GCS2Support_SRCS += PIGCSMotorControllerNoRefVel.cpp
 PI_GCS2Support_SRCS += TranslatePIError.cpp
 PI_GCS2Support_SRCS += PIInterface.cpp
+PI_GCS2Support_SRCS += PICoordinateSystem.cpp
 
 PI_GCS2Support_LIBS += motor
 PI_GCS2Support_LIBS += asyn

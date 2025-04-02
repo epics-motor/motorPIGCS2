@@ -16,6 +16,7 @@ DB += PI_SupportCtrl.db
 DB += PI_SupportError.db
 DB += PI_Support.db
 DB += PI_SupportCL.db
+DB += PI_SupportCS.db
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add

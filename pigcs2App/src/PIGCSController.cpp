@@ -29,6 +29,7 @@ Created: 15.12.2010
 #include "PIC885Controller.h"
 #include "PIGCSMotorControllerNoRefVel.h"
 #include "TranslatePIError.h"
+#include "PICoordinateSystem.h"
 
 
 //#undef asynPrint
@@ -91,7 +92,6 @@ PIGCSController* PIGCSController::CreateGCSController(PIInterface* pInterface, c
 				||	strstr(szIDN, "F-HEX") != NULL
 				||	strstr(szIDN, "F-206") != NULL
 				||	strstr(szIDN, "M-8") != NULL
-				||	strstr(szIDN, "C-887") != NULL
 		)
 	{
 		if (IsGCSVersion(pInterface, 2.0))
@@ -102,6 +102,10 @@ PIGCSController* PIGCSController::CreateGCSController(PIInterface* pInterface, c
 		{
 			return new PIHexapodController(pInterface, szIDN);
 		}
+	}
+	else if (strstr(szIDN, "C-887") != NULL) 
+	{
+		return new PICoordinateSystem(pInterface, szIDN);
 	}
 	else
 	{
