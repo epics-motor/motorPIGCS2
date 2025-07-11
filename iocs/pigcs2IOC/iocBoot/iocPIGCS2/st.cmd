@@ -15,6 +15,7 @@ dbLoadRecords("$(MOTOR)/db/motorUtil.db", "P=pigcs2:")
 
 ##
 < PI_GCS2.cmd
+#< PI_GCS2_hexapod.cmd
 
 iocInit
 

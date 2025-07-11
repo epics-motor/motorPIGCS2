@@ -1,0 +1,46 @@
+file "$(MOTOR)/motorApp/Db/basic_asyn_motor_model2.db"
+{
+pattern
+#Hexapod model H-850
+{P,        M,            DTYP,    PORT, ADDR,      DESC,  EGU,  DIR,  VELO,  VBAS,  ACCL,  BDST,  BVEL,  BACC,  MRES,  PREC,  DHLM,  DLLM,  HLM, LLM, INIT}
+{pigcs2:,  "X",  "asynMotor",  "C887",    0,  "X", mm,      Pos,     0.5,     0,    0,    0,      0.5,    0,  1e-4,  4,     0,   0.0, 50.0, -50.0, ""}
+{pigcs2:,  "Y",  "asynMotor",  "C887",    1,  "Y", mm,      Pos,     0.5,     0,    0,    0,      0.5,    0,  1e-4,  4,     0,   0.0, 25.0, -25.0, ""}
+{pigcs2:,  "Z",  "asynMotor",  "C887",    2,  "Z", mm,      Pos,     0.5,     0,    0,    0,      0.5,    0,  1e-4,  4,     0,   0.0, 50.0, -50.0, ""}
+{pigcs2:,  "U",  "asynMotor",  "C887",    3,  "U", degree,  Pos,     0.5,     0,    0,    0,      0.5,    0,  1e-4,  4,     0,   0.0, 15.0, -15.0, ""}
+{pigcs2:,  "V",  "asynMotor",  "C887",    4,  "V", degree,  Pos,     0.5,     0,    0,    0,      0.5,    0,  1e-4,  4,     0,   0.0, 30.0, -30.0, ""}
+{pigcs2:,  "W",  "asynMotor",  "C887",    5,  "W", degree,  Pos,     0.5,     0,    0,    0,      0.5,    0,  1e-4,  4,     0,   0.0, 15.0, -15.0, ""}
+}
+
+file "$(TOP)/db/PI_Support.db"
+{
+pattern
+{P,          M,     PORT,    ADDR,    TIMEOUT }
+{pigcs2:,  "X:",  "C887",     0,        1   }
+{pigcs2:,  "Y:",  "C887",     1,        1   }
+{pigcs2:,  "Z:",  "C887",     2,        1   }
+{pigcs2:,  "U:",  "C887",     3,        1   }
+{pigcs2:,  "V:",  "C887",     4,        1   }
+{pigcs2:,  "W:",  "C887",     5,        1   }
+}
+
+#file "$(TOP)/db/PI_SupportCtrl.db"
+#{
+#pattern
+#{P,           PORT  }
+#{pigcs2:,  "C887" }
+#}
+
+file "$(TOP)/db/PI_SupportError.db"
+{
+pattern
+{P,           PORT  }
+{pigcs2:,  "C887" }
+}
+
+#Coordinate System
+file "$(TOP)/db/PI_SupportCS.db"
+{
+pattern
+{P,           PORT  }
+{pigcs2:,  "C887" }
+}

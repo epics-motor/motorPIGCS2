@@ -172,6 +172,8 @@ asynStatus PIasynAxis::poll(bool *returnMoving)
 			m_pGCSController->getAxisOvf(this, axisovf);
 			setIntegerParam(pController_->m_CloseLoopValue.PI_SUP_RBOVF,axisovf);
 
+			m_pGCSController->getTravelLimits(this, negLimit_, posLimit_);
+
 			for(unsigned int param=0 ; param<PIGCS2_CL_PARAM_QTT ; param++)
 			{
 				double ValueAxisParam=0;
@@ -197,6 +199,8 @@ asynStatus PIasynAxis::poll(bool *returnMoving)
     setIntegerParam(pController_->motorStatusGainSupport_,	true);
     setIntegerParam(pController_->motorStatusProblem_,		m_bProblem);
     setIntegerParam(pController_->motorStatusPowerOn_,		m_bServoControl);
+    setDoubleParam(pController_->motorLowLimit_, 			negLimit_);
+    setDoubleParam(pController_->motorHighLimit_, 		    posLimit_);
     setIntegerParam(pController_->PI_SUP_SERVO,	      		m_bServoControl );
 
     callParamCallbacks();

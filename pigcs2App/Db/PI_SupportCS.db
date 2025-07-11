@@ -1,0 +1,92 @@
+# Support based on Work and Tool Coordinate system
+
+#The work-and-tool concept can be used for work with user-defined
+#coordinate systems.
+#The work-and-tool concept uses a combination of two active -->
+#operating coordinate systems ("work coordinate system" and "tool
+#coordinate system"). The X, Y, and Z axes of the tool coordinate system
+#are permanently connected to the motion platform of the hexapod;
+#i.e., the tool coordinate system moves together with the platform. The
+#X, Y, and Z axes of the work coordinate system are always spatially
+#fixed (in relation to the hexapod); i.e., the work coordinate system
+#does not move when the platform of the hexapod moves.
+#The current position of the motion platform of the hexapod can be
+#considered the position of the tool coordinate system in the work
+#coordinate system.
+#The center of rotation always lies at the origin of the tool coordinate
+#system and it therefore moves just as the tool coordinate system with
+#the platform.
+
+#Set Target Absolute Move, Relative In Tool or Relative In Work Coordinate System in motor record controller. 
+record(mbbo, "$(P)CS_TARGETMODE") {
+    field(DESC, "Set target mode")
+    field(DTYP, "asynInt32")
+    field(ZRST, "Absolute Position")           field(ZRVL, 0)
+    field(ONST, "Relative In Tool CS")         field(ONVL, 1)
+    field(TWST, "Relative In Work CS")         field(TWVL, 2)
+    field(VAL, "0")
+    field(OUT,  "@asyn($(PORT),0,0)PI_CS_TARGETMODE")
+}
+
+#Get Target Absolute move, Relative In Tool or Relative In Work Coordinate System in motor record controller.
+record(mbbi, "$(P)CS_RBTARGETMODE") {
+    field(DESC, "Get target mode")
+    field(DTYP, "asynInt32")
+    field(ZRST, "Absolute Position")           field(ZRVL, 0)
+    field(ONST, "Relative In Tool CS")         field(ONVL, 1)
+    field(TWST, "Relative In Work CS")         field(TWVL, 2)
+    field(INP,  "@asyn($(PORT),0,0)PI_CS_TARGETMODE")
+    field(SCAN, "I/O Intr")
+}
+
+#Activates the specified coordinate system.
+record(stringout, "$(P)CS_ACTIVATE") {
+   field(DESC, "Activate Coordinate System")
+   field(DTYP, "asynOctetWrite")
+   field(OUT, "@asyn($(PORT),0,0)PI_CS_ACTIVATE")
+}
+
+#Lists the names of all the active coordinate systems and displays their type.
+record(waveform, "$(P)CS_RBACTIVES")
+{  
+   field(DESC, "Get All the Active Coordinate Systems") 
+	field(DTYP, "asynOctetRead")
+   field(FTVL, "CHAR")
+	field(INP, "@asyn($(PORT),0,0)PI_CS_ACTIVATE")
+	field(SCAN, "I/O Intr")
+   field(NELM, "1000")
+}
+
+#Links two coordinate systems (Tool and Work) to create a chain of ChildCS and ParentCS (Example: "ChildCS ParentCS")
+record(stringout, "$(P)CS_LINK") {
+   field(DESC, "Set Link CS Child and Parent")
+   field(DTYP, "asynOctetWrite")
+   field(OUT, "@asyn($(PORT),0,0)PI_CS_LINK")
+}
+
+#Lists the components of the existing coordinate system.
+record(waveform, "$(P)CS_RBLINK")
+{  
+   field(DESC, "Get Coordinate System Chains") 
+	field(DTYP, "asynOctetRead")
+   field(FTVL, "CHAR")
+	field(INP, "@asyn($(PORT),0,0)PI_CS_LINK")
+	field(SCAN, "I/O Intr")
+   field(NELM, "1000")
+}
+
+#Define Tool Coordinate System Offset to specific CSname and Axis. (Command example: "CSName X 2.0").
+#If CSName does not exist, a new CSName Tool will be created.
+record(stringout, "$(P)CS_KST_OFFSET") {
+   field(DESC, "Set Tool CS Offset")
+   field(DTYP, "asynOctetWrite")
+   field(OUT, "@asyn($(PORT),0,0)PI_CS_KST")
+}
+
+#Define Work Coordinate System Offset to specific CSname and Axis. (Example: "CSname X 2.0").
+#If CSName does not exist, a new CSName Work will be created.
+record(stringout, "$(P)CS_KSW_OFFSET") {
+   field(DESC, "Set Work CS Offset")
+   field(DTYP, "asynOctetWrite")
+   field(OUT, "@asyn($(PORT),0,0)PI_CS_KSW")
+}
